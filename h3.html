@@ -593,6 +593,7 @@
                 </div>
                 <div class="api-buttons">
                     <button class="btn" onclick="generateIPWithOpenAI()">生成IP形象描述</button>
+                    <button class="btn" style="background: #ff6b6b;" onclick="generateIPImage()">生成IP形象图像</button>
                     <button class="btn" style="background: #4ecdc4;" onclick="clearOpenAIForm()">清空表单</button>
                 </div>
             </div>
@@ -1049,6 +1050,61 @@
             document.getElementById('openai-api-key').value = '';
             document.getElementById('openai-ip-description').value = '';
             document.getElementById('openai-ip-result').style.display = 'none';
+        }
+
+        // 生成IP形象图像
+        function generateIPImage() {
+            const apiKey = document.getElementById('openai-api-key').value;
+            const description = document.getElementById('openai-ip-description').value;
+
+            if (!apiKey) {
+                alert('请输入您的OpenAI API Key');
+                return;
+            }
+
+            if (!description) {
+                alert('请输入IP形象描述');
+                return;
+            }
+
+            // 显示加载状态
+            const resultDiv = document.getElementById('openai-ip-result');
+            const resultContent = document.getElementById('openai-ip-result-content');
+            resultDiv.style.display = 'block';
+            resultContent.innerHTML = '<div class="loading">正在生成IP形象图像，请稍候...</div>';
+
+            // 调用DALL-E API
+            fetch('https://api.gpt.ge/v1/images/generations', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${apiKey}`,
+                    'x-foo': 'true'
+                },
+                body: JSON.stringify({
+                    model: 'dall-e-3',
+                    prompt: `设计一个IP形象：${description}。请创建一个专业、可爱、符合描述的IP形象图像。`,
+                    n: 1,
+                    size: '1024x1024'
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.data && data.data[0] && data.data[0].url) {
+                    resultContent.innerHTML = `
+                        <div style="text-align: center; padding: 20px; border-radius: 10px; border-left: 4px solid var(--macaron-green);">
+                            <p style="margin-bottom: 15px;"><strong>IP形象图像：</strong></p>
+                            <img src="${data.data[0].url}" alt="IP形象" style="max-width: 100%; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
+                        </div>
+                    `;
+                } else {
+                    resultContent.innerHTML = `<div class="error">生成失败：${data.error?.message || '未知错误'}</div>`;
+                }
+            })
+            .catch(error => {
+                console.error('API调用失败:', error);
+                resultContent.innerHTML = '<div class="error">API调用失败，请检查您的API Key是否正确</div>';
+            });
         }
     </script>
 </body>
