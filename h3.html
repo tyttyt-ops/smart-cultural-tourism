@@ -635,6 +635,29 @@
                 <div class="result-content" id="model-result-content"></div>
             </div>
         </div>
+        
+        <div class="api-section" style="margin-top: 40px;">
+            <h3 style="color: var(--macaron-purple); margin-bottom: 20px;">OpenAI 3D建模</h3>
+            <div class="api-form">
+                <div class="form-group">
+                    <label for="openai-3d-api-key">OpenAI API Key</label>
+                    <input type="password" id="openai-3d-api-key" value="sk-zotaGvPzvE85FttS5d994b8bAc70481285DaB21c77B29e25" placeholder="请输入您的OpenAI API Key">
+                </div>
+                <div class="form-group">
+                    <label for="openai-3d-description">3D模型描述</label>
+                    <textarea id="openai-3d-description" placeholder="请详细描述3D模型的特征、风格、用途等"></textarea>
+                </div>
+                <div class="api-buttons">
+                    <button class="btn" onclick="generate3DWithOpenAI()">生成3D模型描述</button>
+                    <button class="btn" style="background: #ff6b6b;" onclick="generate3DModel()">生成3D模型</button>
+                    <button class="btn" style="background: #4ecdc4;" onclick="clear3DForm()">清空表单</button>
+                </div>
+            </div>
+            <div class="api-result" id="openai-3d-result" style="display: none;">
+                <h3>生成结果</h3>
+                <div class="result-content" id="openai-3d-result-content"></div>
+            </div>
+        </div>
     </div>
 
     <div class="section fade-in">
@@ -1105,6 +1128,118 @@
                 console.error('API调用失败:', error);
                 resultContent.innerHTML = '<div class="error">API调用失败，请检查您的API Key是否正确</div>';
             });
+        }
+
+        // 生成3D模型描述
+        function generate3DWithOpenAI() {
+            const apiKey = document.getElementById('openai-3d-api-key').value;
+            const description = document.getElementById('openai-3d-description').value;
+
+            if (!apiKey) {
+                alert('请输入您的OpenAI API Key');
+                return;
+            }
+
+            if (!description) {
+                alert('请输入3D模型描述');
+                return;
+            }
+
+            // 显示加载状态
+            const resultDiv = document.getElementById('openai-3d-result');
+            const resultContent = document.getElementById('openai-3d-result-content');
+            resultDiv.style.display = 'block';
+            resultContent.innerHTML = '<div class="loading">正在生成3D模型描述，请稍候...</div>';
+
+            // 调用OpenAI API
+            fetch('https://api.gpt.ge/v1/chat/completions', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${apiKey}`,
+                    'x-foo': 'true'
+                },
+                body: JSON.stringify({
+                    model: 'gpt-4.1-mini',
+                    messages: [
+                        {
+                            role: 'system',
+                            content: '你是一个专业的3D建模师，擅长根据用户需求生成详细的3D模型设计方案。'
+                        },
+                        {
+                            role: 'user',
+                            content: `请根据以下描述生成一个详细的3D模型设计方案：\n${description}\n\n设计方案应包括：\n1. 模型的外观特征和结构\n2. 模型的材质和纹理\n3. 模型的细节和精度要求\n4. 模型的适用场景\n5. 模型的技术实现建议`
+                        }
+                    ],
+                    temperature: 0.7,
+                    max_tokens: 1000
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.choices && data.choices[0] && data.choices[0].message) {
+                    resultContent.innerHTML = `
+                        <div style="background: #f0f8ff; padding: 20px; border-radius: 10px; border-left: 4px solid var(--macaron-blue);">
+                            <p style="margin-bottom: 15px;"><strong>3D模型设计方案：</strong></p>
+                            <p style="white-space: pre-wrap;">${data.choices[0].message.content}</p>
+                        </div>
+                    `;
+                } else {
+                    resultContent.innerHTML = `<div class="error">生成失败：${data.error?.message || '未知错误'}</div>`;
+                }
+            })
+            .catch(error => {
+                console.error('API调用失败:', error);
+                resultContent.innerHTML = '<div class="error">API调用失败，请检查您的API Key是否正确</div>';
+            });
+        }
+
+        // 生成3D模型
+        function generate3DModel() {
+            const apiKey = document.getElementById('openai-3d-api-key').value;
+            const description = document.getElementById('openai-3d-description').value;
+
+            if (!apiKey) {
+                alert('请输入您的OpenAI API Key');
+                return;
+            }
+
+            if (!description) {
+                alert('请输入3D模型描述');
+                return;
+            }
+
+            // 显示加载状态
+            const resultDiv = document.getElementById('openai-3d-result');
+            const resultContent = document.getElementById('openai-3d-result-content');
+            resultDiv.style.display = 'block';
+            resultContent.innerHTML = '<div class="loading">正在生成3D模型，请稍候...</div>';
+
+            // 这里可以集成3D模型生成API，例如Luma AI、Threedy等
+            // 目前使用模拟数据
+            setTimeout(() => {
+                resultContent.innerHTML = `
+                    <div style="text-align: center; padding: 20px; border-radius: 10px; border-left: 4px solid var(--macaron-green);">
+                        <p style="margin-bottom: 15px;"><strong>3D模型生成：</strong></p>
+                        <p>3D模型生成功能需要集成专业的3D建模API，如Luma AI、Threedy等。</p>
+                        <p>请使用以下步骤获取3D模型：</p>
+                        <ol style="text-align: left; margin: 15px 0;">
+                            <li>注册并获取3D建模API密钥</li>
+                            <li>在代码中配置API密钥</li>
+                            <li>调用API生成3D模型</li>
+                            <li>下载并使用生成的模型</li>
+                        </ol>
+                        <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=3D%20model%20creation%20process%2C%203D%20modeling%20software%2C%20professional%203D%20design&image_size=landscape_16_9" alt="3D建模" style="max-width: 100%; border-radius: 10px; margin-top: 20px;">
+                    </div>
+                `;
+            }, 2000);
+        }
+
+        // 清空3D表单
+        function clear3DForm() {
+            document.getElementById('openai-3d-api-key').value = '';
+            document.getElementById('openai-3d-description').value = '';
+            document.getElementById('openai-3d-result').style.display = 'none';
         }
     </script>
 </body>
