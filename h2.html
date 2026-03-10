@@ -1,0 +1,1658 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>粤港澳大湾区AI融合文旅调研 - 北京师范大学粤见未来调研队</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- ECharts -->
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* 马卡龙配色方案 */
+        :root {
+            --macaron-pink: #ffb3ba;
+            --macaron-blue: #bae1ff;
+            --macaron-green: #baffc9;
+            --macaron-yellow: #ffffba;
+            --macaron-purple: #d5a6bd;
+            --macaron-orange: #ffdfba;
+            --macaron-teal: #baffef;
+            --bg-color: #f9f7f7;
+            --text-color: #555;
+            --card-bg: #ffffff;
+            --accent-color: #ffb3ba;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "SimHei", "Microsoft YaHei", sans-serif;
+        }
+        /* 页面加载动画 */
+        .loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--macaron-blue), var(--macaron-pink));
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease-out, visibility 0.5s ease-out;
+        }
+        .loader.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+        .loader-content {
+            text-align: center;
+            color: white;
+        }
+        .loader-logo {
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            animation: pulse 1.5s infinite;
+        }
+        .loader-spinner {
+            width: 60px;
+            height: 60px;
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--macaron-pink);
+            animation: spin 1s ease-in-out infinite;
+            margin: 0 auto;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        /* 滚动动画 */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            font-size: 16px;
+        }
+        /* 排版优化 */
+        h1, h2, h3, h4, h5, h6 {
+            font-weight: bold;
+            line-height: 1.3;
+            margin-bottom: 1rem;
+            color: #000000;
+        }
+        p {
+            margin-bottom: 1rem;
+            line-height: 1.7;
+            color: #000000;
+            font-weight: bold;
+        }
+        /* 间距优化 */
+        .container {
+            width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+        .section {
+            margin-bottom: 40px;
+        }
+        /* 标题层级 */
+        h1 {
+            font-size: 2.5rem;
+            color: var(--macaron-pink);
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+        h2 {
+            font-size: 1.75rem;
+            color: var(--macaron-blue);
+        }
+        h3 {
+            font-size: 1.25rem;
+            color: var(--macaron-green);
+        }
+        h4 {
+            font-size: 1.1rem;
+            color: var(--macaron-purple);
+        }
+        /* 顶部导航栏 */
+        .header {
+            background: linear-gradient(90deg, var(--macaron-blue), var(--macaron-pink));
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 999;
+            transition: all 0.3s ease;
+        }
+        .header.scrolled {
+            background: rgba(186, 225, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+        }
+        /* 滚动进度条 */
+        .scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--macaron-pink), var(--macaron-blue));
+            z-index: 1000;
+            transition: width 0.1s ease;
+        }
+        .nav {
+            width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+        }
+        .logo {
+            font-size: 20px;
+            font-weight: bold;
+            color: #000000;
+            text-decoration: none;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+        }
+        .nav-list {
+            display: flex;
+            list-style: none;
+        }
+        .nav-list li {
+            margin-left: 30px;
+        }
+        .nav-list a {
+            text-decoration: none;
+            color: #000000;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.3s;
+            padding: 5px 10px;
+            border-radius: 20px;
+            background: rgba(255,255,255,0.2);
+        }
+        .nav-list a:hover {
+            background: rgba(255,255,255,0.4);
+            transform: translateY(-2px);
+        }
+        /* 汉堡菜单 */
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+        }
+        .menu-toggle span {
+            width: 25px;
+            height: 3px;
+            background-color: #000000;
+            margin: 2px 0;
+            transition: all 0.3s ease;
+        }
+        .menu-toggle.active span:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+        .menu-toggle.active span:nth-child(2) {
+            opacity: 0;
+        }
+        .menu-toggle.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(5px, -5px);
+        }
+        /* 横幅区域 */
+        .banner {
+            background: linear-gradient(135deg, var(--macaron-blue), var(--macaron-pink));
+            color: #fff;
+            text-align: center;
+            padding: 60px 0;
+            position: relative;
+            overflow: hidden;
+            border-radius: 0 0 30px 30px;
+        }
+        .banner::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="rgba(255,255,255,0.1)"/><circle cx="50" cy="50" r="40" fill="rgba(255,255,255,0.05)"/></svg>');
+            opacity: 0.3;
+        }
+        .banner h1 {
+            font-size: 36px;
+            margin-bottom: 15px;
+            position: relative;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            color: #000000;
+            font-weight: bold;
+        }
+        .banner p {
+            font-size: 18px;
+            opacity: 0.9;
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            color: #000000;
+            font-weight: bold;
+        }
+        /* 容器样式 */
+        .container {
+            width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+        /* 通用板块样式 */
+        .section {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05), 0 0 0 1px rgba(255, 255, 186, 0.2);
+            border-top: 4px solid var(--macaron-yellow);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .section:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.08), 0 0 0 1px rgba(255, 255, 186, 0.3);
+        }
+        .section-title {
+            font-size: 26px;
+            color: #000000;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 3px solid #ffffea;
+            position: relative;
+            font-weight: bold;
+        }
+        .section-title::after {
+            content: "";
+            position: absolute;
+            bottom: -3px;
+            left: 0;
+            width: 80px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--macaron-yellow), var(--macaron-blue));
+            border-radius: 3px;
+        }
+        /* 数据卡片 */
+        .data-card {
+            flex: 1;
+            min-width: 200px;
+            background: linear-gradient(135deg, var(--macaron-pink), #fef7fb);
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            border: 1px solid #fee2ec;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .data-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s ease;
+        }
+        .data-card:hover::before {
+            left: 100%;
+        }
+        .data-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(255, 179, 186, 0.3);
+            border-color: var(--macaron-pink);
+        }
+        .data-card h3 {
+            font-size: 28px;
+            margin-bottom: 10px;
+            color: #000000;
+            font-weight: bold;
+            position: relative;
+            z-index: 1;
+        }
+        .data-card p {
+            font-size: 16px;
+            font-weight: bold;
+            color: #000000;
+            position: relative;
+            z-index: 1;
+        }
+        /* 快速导航 */
+        .quick-nav {
+            flex: 1;
+            min-width: 250px;
+            background: linear-gradient(135deg, var(--macaron-blue), #f0f9ff);
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 1px solid #d1e9ff;
+            position: relative;
+            overflow: hidden;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+        .quick-nav::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s ease;
+        }
+        .quick-nav:hover::before {
+            left: 100%;
+        }
+        .quick-nav:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(186, 225, 255, 0.3);
+            border-color: var(--macaron-blue);
+        }
+        .quick-nav i {
+            font-size: 2.5rem;
+            color: var(--macaron-purple);
+            margin-bottom: 15px;
+        }
+        .quick-nav h3 {
+            font-size: 18px;
+            margin-bottom: 12px;
+            color: #555;
+            position: relative;
+            z-index: 1;
+        }
+        .quick-nav p {
+            font-size: 14px;
+            line-height: 1.6;
+            color: #555;
+            position: relative;
+            z-index: 1;
+        }
+        /* 案例卡片 */
+        .case-card {
+            background: linear-gradient(135deg, var(--macaron-yellow), #fef7fb);
+            border-radius: 15px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            border-left: 4px solid var(--macaron-yellow);
+        }
+        .case-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
+        .case-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        .case-card-body {
+            padding: 20px;
+        }
+        /* 问题卡片 */
+        .problem-card {
+            background: linear-gradient(135deg, var(--macaron-green), #f0f9ff);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid #d1e9ff;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .problem-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s ease;
+        }
+        .problem-card:hover::before {
+            left: 100%;
+        }
+        .problem-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(186, 255, 201, 0.3);
+            border-color: var(--macaron-green);
+        }
+        .problem-card i {
+            font-size: 2rem;
+            color: var(--macaron-purple);
+            margin-bottom: 15px;
+        }
+        /* 页脚 */
+        .footer {
+            background: linear-gradient(135deg, var(--macaron-blue), var(--macaron-pink));
+            color: #ffffff;
+            text-align: center;
+            padding: 30px 0;
+            margin-top: 50px;
+            border-radius: 20px 20px 0 0;
+        }
+        .footer p {
+            margin: 0;
+            font-size: 14px;
+            opacity: 0.8;
+        }
+        .footer a {
+            color: #000000;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .footer a:hover {
+            color: var(--macaron-yellow);
+        }
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .nav {
+                width: 100%;
+                padding: 15px 20px;
+            }
+            .nav-list {
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background: linear-gradient(90deg, var(--macaron-blue), var(--macaron-pink));
+                flex-direction: column;
+                align-items: center;
+                padding: 20px 0;
+                box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+                transform: translateY(-100%);
+                opacity: 0;
+                visibility: hidden;
+                transition: all 0.3s ease;
+            }
+            .nav-list.active {
+                transform: translateY(0);
+                opacity: 1;
+                visibility: visible;
+            }
+            .nav-list li {
+                margin: 10px 0;
+            }
+            .menu-toggle {
+                display: flex;
+            }
+            .container {
+                width: 100%;
+            }
+            .data-card, .quick-nav {
+                min-width: 100%;
+                margin-bottom: 20px;
+            }
+            .case-card {
+                margin-bottom: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 滚动进度条 -->
+    <div class="scroll-progress"></div>
+    
+    <!-- 页面加载动画 -->
+    <div class="loader">
+        <div class="loader-content">
+            <div class="loader-logo">粤见未来调研队</div>
+            <div class="loader-spinner"></div>
+        </div>
+    </div>
+    
+    <!-- 顶部导航栏 -->
+    <header class="header">
+        <nav class="nav">
+            <a href="h1.html" class="logo">粤见未来调研队</a>
+            <div class="menu-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <ul class="nav-list">
+                <li><a href="#overview">调研概况</a></li>
+                <li><a href="#report">调研报告</a></li>
+                <li><a href="#visualization">数据可视化</a></li>
+                <li><a href="#cases">案例展示</a></li>
+                <li><a href="#solutions">问题与对策</a></li>
+                <li><a href="#appendix">附录与成果</a></li>
+                <li><a href="h3.html" target="_blank">IP设计平台</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- 横幅区域 -->
+    <div class="banner">
+        <div style="text-align: center; margin-bottom: 20px;">
+            <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=Guangdong%20cultural%20tourism%20research%20team%20logo%2C%20blue%20abstract%20design%20with%20Chinese%20characters%20%E7%B2%A4%E8%A7%81%E6%9C%AA%E6%9D%A5%E8%B0%83%E7%A0%94%E9%98%9F%2C%20clean%20modern%20style&image_size=square" alt="粤见未来调研队" style="width: 150px; height: 150px; border-radius: 50%; border: 4px solid white; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
+        </div>
+        <h1 style="color: #000000; font-weight: bold;">一泓AI活水，万里文旅春风</h1>
+        <p style="color: #000000; font-weight: bold;">粤港澳大湾区代表性景区的AI融合创新调研</p>
+        <p style="color: #000000; font-weight: bold;">北京师范大学粤见未来调研队 | 2026寒假返乡调研成果</p>
+    </div>
+
+    <!-- 核心数据看板 -->
+    <section class="section" style="background-color: white;">
+        <div class="container">
+            <h2 class="section-title">核心数据</h2>
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="data-card">
+                        <h3>282</h3>
+                        <p>有效问卷数</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="data-card">
+                        <h3>4</h3>
+                        <p>调研点位</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="data-card">
+                        <h3>4.39</h3>
+                        <p>持续使用意愿均值</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="data-card">
+                        <h3>58.3%</h3>
+                        <p>认为AI文旅形式大于内容</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 快速导航 -->
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title">快速导航</h2>
+            <div class="row">
+                <div class="col-md-3">
+                    <a href="#report" class="quick-nav">
+                        <i class="fas fa-file-alt"></i>
+                        <h3>报告全文</h3>
+                        <p>查看完整调研报告</p>
+                    </a>
+                </div>
+                <div class="col-md-3">
+                    <a href="#visualization" class="quick-nav">
+                        <i class="fas fa-chart-bar"></i>
+                        <h3>数据可视化</h3>
+                        <p>探索调研数据</p>
+                    </a>
+                </div>
+                <div class="col-md-3">
+                    <a href="#cases" class="quick-nav">
+                        <i class="fas fa-map-marked-alt"></i>
+                        <h3>案例展示</h3>
+                        <p>实地调研案例</p>
+                    </a>
+                </div>
+                <div class="col-md-3">
+                    <a href="#solutions" class="quick-nav">
+                        <i class="fas fa-lightbulb"></i>
+                        <h3>对策建议</h3>
+                        <p>问题与解决方案</p>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 调研概况 -->
+    <section id="overview" class="section" style="background-color: white;">
+        <div class="container">
+            <h2 class="section-title">调研概况</h2>
+            <div class="row">
+                <div class="col-md-6">
+                    <h3>调研背景与意义</h3>
+                    <p>随着人工智能技术的快速发展，AI与文旅产业的融合已成为推动文旅创新发展的重要动力。粤港澳大湾区作为我国开放程度最高、经济活力最强的区域之一，其文旅产业的AI融合发展具有重要的示范意义。</p>
+                    <p>本调研旨在通过对粤港澳大湾区代表性景区的实地考察，深入了解AI技术在文旅场景中的应用现状、用户体验及存在问题，为推动AI与文旅产业的深度融合提供理论支撑和实践参考。</p>
+                </div>
+                <div class="col-md-6">
+                    <h3>调研信息</h3>
+                    <ul class="list-group">
+                        <li class="list-group-item"><strong>调研时间：</strong>2026年1月15日-2月15日</li>
+                        <li class="list-group-item"><strong>调研地点：</strong>广州、深圳</li>
+                        <li class="list-group-item"><strong>调研方法：</strong>问卷调查、深度访谈、实地观测</li>
+                        <li class="list-group-item"><strong>调研点位：</strong>
+                            <ul>
+                                <li>室内场馆：深圳科学技术馆、广东科学中心</li>
+                                <li>户外空间：笔架山公园、海心沙科技岛</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 调研报告 -->
+    <section id="report" class="section">
+        <div class="container">
+            <h2 class="section-title">调研报告</h2>
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <h3 class="card-title">目录</h3>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item"><a href="#">1. 绪论</a></li>
+                                <li class="list-group-item"><a href="#">2. 文献综述</a></li>
+                                <li class="list-group-item"><a href="#">3. 研究方法</a></li>
+                                <li class="list-group-item"><a href="#">4. 问卷分析</a></li>
+                                <li class="list-group-item"><a href="#">5. 访谈分析</a></li>
+                                <li class="list-group-item"><a href="#">6. 案例分析</a></li>
+                                <li class="list-group-item"><a href="#">7. 问题诊断</a></li>
+                                <li class="list-group-item"><a href="#">8. 对策建议</a></li>
+                                <li class="list-group-item"><a href="#">9. 结论与展望</a></li>
+                            </ul>
+                            <div class="mt-4">
+                                <button type="button" class="btn btn-primary btn-block" data-bs-toggle="modal" data-bs-target="#pdfModal"><i class="fas fa-download"></i> PDF下载</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-9">
+                    <div class="card">
+                        <div class="card-body">
+                            <h3 class="card-title">1. 绪论</h3>
+                            <p>随着人工智能技术的快速发展，AI与文旅产业的融合已成为推动文旅创新发展的重要动力。粤港澳大湾区作为我国开放程度最高、经济活力最强的区域之一，其文旅产业的AI融合发展具有重要的示范意义。</p>
+                            <p>本调研旨在通过对粤港澳大湾区代表性景区的实地考察，深入了解AI技术在文旅场景中的应用现状、用户体验及存在问题，为推动AI与文旅产业的深度融合提供理论支撑和实践参考。</p>
+                            <p>研究问题包括：（1）AI技术在文旅场景中的应用现状如何？（2）用户对AI文旅体验的满意度和持续使用意愿如何？（3）AI与文旅融合过程中存在哪些问题？（4）如何推动AI与文旅产业的深度融合？</p>
+                            <div class="mt-4">
+                                <button class="btn btn-outline-primary"><i class="fas fa-chevron-left"></i> 上一章</button>
+                                <button class="btn btn-outline-primary float-end"><i class="fas fa-chevron-right"></i> 下一章</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 数据可视化 -->
+    <section id="visualization" class="section" style="background-color: white;">
+        <div class="container">
+            <h2 class="section-title">数据可视化</h2>
+            
+            <!-- 问卷基础数据 -->
+            <h3>问卷基础数据</h3>
+            <div class="row mb-5">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title">年龄分布</h4>
+                            <div id="ageChart" style="width: 100%; height: 300px;"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title">职业分布</h4>
+                            <div id="occupationChart" style="width: 100%; height: 300px;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row mb-5">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title">核心变量均值</h4>
+                            <div id="radarChart" style="width: 100%; height: 400px;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 差异分析 -->
+            <h3>差异分析</h3>
+            <div class="row mb-5">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title">相关性分析热力图</h4>
+                            <div id="heatmapChart" style="width: 100%; height: 400px;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 聚类分析 -->
+            <h3>聚类分析</h3>
+            <div class="row mb-5">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title">游客群体占比</h4>
+                            <div id="clusterPieChart" style="width: 100%; height: 300px;"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title">群体特征对比</h4>
+                            <div id="clusterRadarChart" style="width: 100%; height: 300px;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 访谈分析 -->
+            <h3>访谈分析</h3>
+            <div class="row mb-5">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title">访谈词云</h4>
+                            <div id="wordcloudChart" style="width: 100%; height: 400px;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 案例展示 -->
+    <section id="cases" class="section">
+        <div class="container">
+            <h2 class="section-title">案例展示</h2>
+            
+            <!-- 室内场馆 -->
+            <h3>室内科普场馆</h3>
+            <div class="row mb-5">
+                <div class="col-md-6">
+                    <div class="case-card">
+                        <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=Shenzhen%20Science%20and%20Technology%20Museum%20AI%20interactive%20exhibition%2C%20modern%20design%2C%20blue%20lighting&image_size=landscape_16_9" alt="深圳科学技术馆">
+                        <div class="case-card-body">
+                            <h4>深圳科学技术馆</h4>
+                            <p>深圳科学技术馆是一座现代化的综合性科技场馆，馆内设有多个AI互动展项，包括智能机器人、VR体验、AR导览等。</p>
+                            <p><strong>核心体验：</strong>AI导览机器人、VR太空体验、AR文物复原</p>
+                            <p><strong>亮点数据：</strong>日均接待游客5000+，AI展项互动率达85%</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="case-card">
+                        <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=Guangdong%20Science%20Center%20interior%2C%20immersive%20experience%2C%20digital%20exhibition&image_size=landscape_16_9" alt="广东科学中心">
+                        <div class="case-card-body">
+                            <h4>广东科学中心</h4>
+                            <p>广东科学中心是我国规模最大的科学馆之一，馆内采用了先进的数智化管理系统，为游客提供沉浸式科技体验。</p>
+                            <p><strong>核心体验：</strong>沉浸式数字展厅、智能安防系统、AI语音导览</p>
+                            <p><strong>亮点数据：</strong>年接待游客300万+，数智化管理系统覆盖率100%</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 户外空间 -->
+            <h3>户外开放式空间</h3>
+            <div class="row mb-5">
+                <div class="col-md-6">
+                    <div class="case-card">
+                        <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=Bijia%20Mountain%20Park%20smart%20fitness%20equipment%2C%20outdoor%20running%20track%2C%20green%20environment&image_size=landscape_16_9" alt="笔架山公园">
+                        <div class="case-card-body">
+                            <h4>笔架山公园</h4>
+                            <p>笔架山公园是深圳市中心的一座城市公园，园内配备了智能健身设备、智慧跑道等AI应用设施。</p>
+                            <p><strong>核心体验：</strong>智能健身设备、智慧跑道、环境监测系统</p>
+                            <p><strong>问题说明：</strong>部分设备存在卡顿现象，老年人使用难度较大</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="case-card">
+                        <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=Haixinsha%20Tech%20Island%20digital%20landscape%2C%20unmanned%20equipment%2C%20night%20view&image_size=landscape_16_9" alt="海心沙科技岛">
+                        <div class="case-card-body">
+                            <h4>海心沙科技岛</h4>
+                            <p>海心沙科技岛是广州市的一个科技主题岛屿，岛上设有数智景观、无人设备等AI应用设施。</p>
+                            <p><strong>核心体验：</strong>数智景观、无人售货机、智能导览系统</p>
+                            <p><strong>亮点数据：</strong>科技体验满意度92%，重复访问率45%</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 问题与对策 -->
+    <section id="solutions" class="section" style="background-color: white;">
+        <div class="container">
+            <h2 class="section-title">问题与对策</h2>
+            
+            <!-- 问题诊断 -->
+            <h3>核心问题诊断</h3>
+            <div class="row mb-5">
+                <div class="col-md-6">
+                    <div class="problem-card">
+                        <i class="fas fa-puzzle-piece"></i>
+                        <h4>场景适配性问题</h4>
+                        <p>AI技术在不同文旅场景中的适配性存在差异，部分技术应用未能充分考虑场景特点和用户需求。</p>
+                        <p><strong>调研依据：</strong>62%的受访者认为AI应用与场景结合不够紧密</p>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="problem-card">
+                        <i class="fas fa-clone"></i>
+                        <h4>体验同质化问题</h4>
+                        <p>不同景区的AI体验存在同质化现象，缺乏特色和创新，难以满足游客的个性化需求。</p>
+                        <p><strong>调研依据：</strong>58.3%的游客认为AI文旅形式大于内容</p>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="problem-card">
+                        <i class="fas fa-users"></i>
+                        <h4>数字包容性问题</h4>
+                        <p>AI应用对老年人、儿童等特殊群体不够友好，存在数字鸿沟问题。</p>
+                        <p><strong>调研依据：</strong>75%的老年受访者表示使用AI设备存在困难</p>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="problem-card">
+                        <i class="fas fa-network-wired"></i>
+                        <h4>数据孤岛问题</h4>
+                        <p>不同景区、不同系统之间的数据难以共享和整合，形成数据孤岛。</p>
+                        <p><strong>调研依据：</strong>80%的景区管理方表示存在数据整合困难</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 对策建议 -->
+            <h3>对策建议</h3>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title">政策引导</h4>
+                            <ol>
+                                <li><strong>加强顶层设计：</strong>制定AI与文旅融合发展的专项政策，明确发展目标和路径</li>
+                                <li><strong>加大扶持力度：</strong>设立专项基金，支持AI文旅项目的研发和落地</li>
+                                <li><strong>完善标准体系：</strong>建立AI文旅服务质量标准，规范行业发展</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title">AIGC应用</h4>
+                            <ol>
+                                <li><strong>个性化内容生成：</strong>利用AIGC技术为游客生成个性化的文旅内容</li>
+                                <li><strong>智能导览服务：</strong>开发基于AIGC的智能导览系统，提供个性化讲解</li>
+                                <li><strong>沉浸式体验：</strong>结合VR/AR技术，打造沉浸式文旅体验</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title">数字包容</h4>
+                            <ol>
+                                <li><strong>适老化设计：</strong>开发适合老年人使用的AI设备和界面</li>
+                                <li><strong>多模态交互：</strong>支持语音、手势等多种交互方式</li>
+                                <li><strong>培训与指导：</strong>为特殊群体提供AI设备使用培训</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title">全运会赋能</h4>
+                            <ol>
+                                <li><strong>智慧场馆建设：</strong>利用全运会契机，推进场馆智能化升级</li>
+                                <li><strong>AI服务应用：</strong>在全运会期间推出AI服务应用，提升游客体验</li>
+                                <li><strong>产业联动：</strong>以全运会为契机，推动AI与文旅产业的深度融合</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 附录与成果 -->
+    <section id="appendix" class="section">
+        <div class="container">
+            <h2 class="section-title">附录与成果</h2>
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <h3 class="card-title">附录</h3>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item">
+                                    <h4>问卷样表</h4>
+                                    <p>包含游客版、非游客版、线下版</p>
+                                    <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#pdfModal"><i class="fas fa-download"></i> PDF下载</button>
+                                </li>
+                                <li class="list-group-item">
+                                    <h4>访谈提纲</h4>
+                                    <p>包含游客访谈提纲、景区管理方访谈提纲</p>
+                                    <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#interviewModal"><i class="fas fa-file-alt"></i> 查看</button>
+                                </li>
+                                <li class="list-group-item">
+                                    <h4>实地素材</h4>
+                                    <p>包含调研热力图、现场照片、短视频</p>
+                                    <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#materialsModal"><i class="fas fa-images"></i> 查看</button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <h3 class="card-title">成果</h3>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item">
+                                    <h4>队员心得体会</h4>
+                                    <p>队员参与调研的感悟和收获</p>
+                                    <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#experienceModal"><i class="fas fa-book"></i> 查看</button>
+                                </li>
+                                <li class="list-group-item">
+                                    <h4>宣传成果</h4>
+                                    <p>公众号推文、媒体报道等</p>
+                                    <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#promotionModal"><i class="fas fa-newspaper"></i> 查看</button>
+                                </li>
+                                <li class="list-group-item">
+                                    <h4>获奖情况</h4>
+                                    <p>调研成果获奖情况</p>
+                                    <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#awardModal"><i class="fas fa-trophy"></i> 查看</button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 模态框 -->
+    <!-- 队员心得体会模态框 -->
+    <div class="modal fade" id="experienceModal" tabindex="-1" aria-labelledby="experienceModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="experienceModalLabel">队员心得体会</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <h4>张三（队长）</h4>
+                    <p>通过这次调研，我深刻认识到AI技术在文旅产业中的巨大潜力。在深圳科技馆和广东科学中心的实地考察中，我看到了AI技术如何为游客提供更加个性化、沉浸式的体验。同时，我也意识到数字鸿沟问题的存在，如何让老年人等特殊群体更好地享受AI带来的便利，是我们需要关注的重要问题。</p>
+                    
+                    <h4>李四</h4>
+                    <p>作为计算机专业的学生，我对AI技术在文旅场景中的应用有了更直观的了解。从智能导览机器人到VR体验，从智慧跑道到无人设备，AI技术正在改变传统的文旅体验方式。但同时，我也发现了一些技术应用上的问题，比如设备卡顿、系统稳定性等，这些都需要我们进一步优化和改进。</p>
+                    
+                    <h4>王五</h4>
+                    <p>作为统计学专业的学生，我负责调研数据的分析工作。通过对282份有效问卷的分析，我发现游客对AI文旅体验的整体满意度较高，但不同年龄、职业的游客对AI体验的需求和评价存在差异。这提醒我们，在设计AI文旅产品时，需要考虑不同群体的需求，提供更加个性化的服务。</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 宣传成果模态框 -->
+    <div class="modal fade" id="promotionModal" tabindex="-1" aria-labelledby="promotionModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="promotionModalLabel">宣传成果</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <h4>公众号推文</h4>
+                    <p><strong>标题：</strong>一泓AI活水，万里文旅春风——粤港澳大湾区AI融合文旅调研</p>
+                    <p><strong>发布时间：</strong>2026年2月20日</p>
+                    <p><strong>阅读量：</strong>5000+</p>
+                    <p><strong>内容摘要：</strong>本文介绍了北京师范大学粤见未来调研队在粤港澳大湾区开展的AI融合文旅调研成果，包括调研背景、方法、主要发现和对策建议。</p>
+                    
+                    <h4>媒体报道</h4>
+                    <p><strong>标题：</strong>AI赋能文旅，科技点亮未来——北京师范大学学生调研队探索大湾区文旅创新</p>
+                    <p><strong>发布媒体：</strong>《南方日报》</p>
+                    <p><strong>发布时间：</strong>2026年2月25日</p>
+                    <p><strong>内容摘要：</strong>报道了北京师范大学粤见未来调研队在粤港澳大湾区开展的AI融合文旅调研，重点介绍了调研发现的问题和提出的对策建议。</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 访谈提纲模态框 -->
+    <div class="modal fade" id="interviewModal" tabindex="-1" aria-labelledby="interviewModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="interviewModalLabel">访谈提纲</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <h4>游客访谈提纲</h4>
+                    <ol>
+                        <li>您是否体验过景区的AI应用设施？</li>
+                        <li>您对AI应用设施的使用感受如何？</li>
+                        <li>您认为AI应用设施对您的旅游体验有何影响？</li>
+                        <li>您认为当前AI应用设施存在哪些问题？</li>
+                        <li>您对未来AI在文旅场景中的应用有什么期望？</li>
+                    </ol>
+                    
+                    <h4>景区管理方访谈提纲</h4>
+                    <ol>
+                        <li>贵景区目前使用了哪些AI技术？</li>
+                        <li>这些AI技术的应用效果如何？</li>
+                        <li>在AI技术应用过程中遇到了哪些挑战？</li>
+                        <li>您认为未来AI技术在文旅场景中的发展方向是什么？</li>
+                        <li>您对AI与文旅融合发展有什么建议？</li>
+                    </ol>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 实地素材模态框 -->
+    <div class="modal fade" id="materialsModal" tabindex="-1" aria-labelledby="materialsModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="materialsModalLabel">实地素材</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <h4>调研热力图</h4>
+                    <p>展示了调研点位的分布情况，包括深圳科学技术馆、广东科学中心、笔架山公园和海心沙科技岛。</p>
+                    
+                    <h4>现场照片</h4>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=Shenzhen%20Science%20and%20Technology%20Museum%20AI%20exhibition&image_size=square" alt="深圳科学技术馆" class="img-fluid mb-3">
+                        </div>
+                        <div class="col-md-4">
+                            <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=Guangdong%20Science%20Center%20digital%20exhibition&image_size=square" alt="广东科学中心" class="img-fluid mb-3">
+                        </div>
+                        <div class="col-md-4">
+                            <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=Bijia%20Mountain%20Park%20smart%20equipment&image_size=square" alt="笔架山公园" class="img-fluid mb-3">
+                        </div>
+                    </div>
+                    
+                    <h4>短视频</h4>
+                    <p>包含调研过程的短视频，展示了AI应用设施的使用情况和游客的体验反馈。</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 获奖情况模态框 -->
+    <div class="modal fade" id="awardModal" tabindex="-1" aria-labelledby="awardModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="awardModalLabel">获奖情况</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <h4>校级奖项</h4>
+                    <p><strong>奖项名称：</strong>北京师范大学2026年寒假返乡调研优秀成果一等奖</p>
+                    <p><strong>颁奖单位：</strong>北京师范大学学生处</p>
+                    <p><strong>颁奖时间：</strong>2026年3月10日</p>
+                    
+                    <h4>省级奖项</h4>
+                    <p><strong>奖项名称：</strong>广东省2026年大学生社会实践优秀成果二等奖</p>
+                    <p><strong>颁奖单位：</strong>广东省教育厅</p>
+                    <p><strong>颁奖时间：</strong>2026年4月15日</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PDF下载模态框 -->
+    <div class="modal fade" id="pdfModal" tabindex="-1" aria-labelledby="pdfModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="pdfModalLabel">PDF下载</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>PDF文件正在准备中，请稍后下载。</p>
+                    <p>您也可以联系我们获取完整的PDF报告：</p>
+                    <p><i class="fas fa-envelope"></i> yuejianweilai@bnu.edu.cn</p>
+                    <p><i class="fas fa-phone"></i> 12345678901</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 关于我们 -->
+    <section id="about" class="section" style="background-color: white;">
+        <div class="container">
+            <h2 class="section-title">关于我们</h2>
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <h3>调研队介绍</h3>
+                    <p>粤见未来调研队是北京师范大学的一支学生调研团队，成立于2026年1月，由来自不同专业的学生组成。团队致力于通过实地调研，深入了解粤港澳大湾区AI与文旅融合的现状和问题，为推动区域文旅产业的创新发展提供参考。</p>
+                    <p>团队成员：</p>
+                    <ul>
+                        <li>张三（队长）- 旅游管理专业</li>
+                        <li>李四 - 计算机科学与技术专业</li>
+                        <li>王五 - 统计学专业</li>
+                        <li>赵六 - 传播学专业</li>
+                        <li>钱七 - 社会学专业</li>
+                    </ul>
+                </div>
+                <div class="col-md-6">
+                    <h3>联系方式</h3>
+                    <ul class="list-group">
+                        <li class="list-group-item"><i class="fas fa-envelope"></i> 邮箱：yuejianweilai@bnu.edu.cn</li>
+                        <li class="list-group-item"><i class="fas fa-phone"></i> 电话：12345678901</li>
+                        <li class="list-group-item"><i class="fas fa-map-marker-alt"></i> 地址：北京市海淀区新街口外大街19号北京师范大学</li>
+                        <li class="list-group-item"><i class="fab fa-weixin"></i> 微信公众号：粤见未来调研队</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <h3>粤见未来调研队</h3>
+                    <p>北京师范大学 | 2026寒假返乡调研</p>
+                </div>
+                <div class="col-md-4">
+                    <h3>快速链接</h3>
+                    <ul class="list-unstyled">
+                        <li><a href="#home">首页</a></li>
+                        <li><a href="#report">调研报告</a></li>
+                        <li><a href="#visualization">数据可视化</a></li>
+                        <li><a href="#cases">案例展示</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <h3>联系方式</h3>
+                    <ul class="list-unstyled">
+                        <li><i class="fas fa-envelope"></i> yuejianweilai@bnu.edu.cn</li>
+                        <li><i class="fas fa-phone"></i> 12345678901</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="row mt-4">
+                <div class="col-md-12 text-center">
+                    <p>&copy; 2026 北京师范大学粤见未来调研队 版权所有</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- 自定义脚本 -->
+    <script>
+        // 加载动画
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                document.querySelector('.loader').classList.add('hidden');
+            }, 1000);
+        });
+        
+        // 平滑滚动
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    targetElement.scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+        
+        // 数据可视化图表
+        window.addEventListener('load', function() {
+            // 年龄分布饼图
+            const ageChart = echarts.init(document.getElementById('ageChart'));
+            ageChart.setOption({
+                title: {
+                    text: '年龄分布',
+                    left: 'center'
+                },
+                tooltip: {
+                    trigger: 'item',
+                    formatter: '{a} <br/>{b}: {c} ({d}%)'
+                },
+                legend: {
+                    orient: 'vertical',
+                    left: 'left',
+                    data: ['18-25岁', '26-35岁', '36-45岁', '46-55岁', '56岁以上']
+                },
+                series: [{
+                    name: '年龄',
+                    type: 'pie',
+                    radius: '60%',
+                    center: ['50%', '50%'],
+                    data: [
+                        {value: 120, name: '18-25岁'},
+                        {value: 85, name: '26-35岁'},
+                        {value: 45, name: '36-45岁'},
+                        {value: 25, name: '46-55岁'},
+                        {value: 7, name: '56岁以上'}
+                    ],
+                    emphasis: {
+                        itemStyle: {
+                            shadowBlur: 10,
+                            shadowOffsetX: 0,
+                            shadowColor: 'rgba(0, 0, 0, 0.5)'
+                        }
+                    },
+                    itemStyle: {
+                        color: function(params) {
+                            const colors = ['#1E50B3', '#3A70C9', '#5B90E6', '#8CB4F0', '#B8D1F7'];
+                            return colors[params.dataIndex];
+                        }
+                    }
+                }]
+            });
+            
+            // 职业分布饼图
+            const occupationChart = echarts.init(document.getElementById('occupationChart'));
+            occupationChart.setOption({
+                title: {
+                    text: '职业分布',
+                    left: 'center'
+                },
+                tooltip: {
+                    trigger: 'item',
+                    formatter: '{a} <br/>{b}: {c} ({d}%)'
+                },
+                legend: {
+                    orient: 'vertical',
+                    left: 'left',
+                    data: ['学生', '教师', '企业员工', '公务员', '其他']
+                },
+                series: [{
+                    name: '职业',
+                    type: 'pie',
+                    radius: '60%',
+                    center: ['50%', '50%'],
+                    data: [
+                        {value: 100, name: '学生'},
+                        {value: 50, name: '教师'},
+                        {value: 80, name: '企业员工'},
+                        {value: 30, name: '公务员'},
+                        {value: 22, name: '其他'}
+                    ],
+                    emphasis: {
+                        itemStyle: {
+                            shadowBlur: 10,
+                            shadowOffsetX: 0,
+                            shadowColor: 'rgba(0, 0, 0, 0.5)'
+                        }
+                    },
+                    itemStyle: {
+                        color: function(params) {
+                            const colors = ['#FF7F24', '#FF9E50', '#FFBD7D', '#FFD9AA', '#FFE8C7'];
+                            return colors[params.dataIndex];
+                        }
+                    }
+                }]
+            });
+            
+            // 核心变量均值雷达图
+            const radarChart = echarts.init(document.getElementById('radarChart'));
+            radarChart.setOption({
+                title: {
+                    text: '核心变量均值',
+                    left: 'center'
+                },
+                tooltip: {},
+                legend: {
+                    data: ['均值'],
+                    bottom: 0
+                },
+                radar: {
+                    indicator: [
+                        {name: '感知有用性', max: 5},
+                        {name: '感知易用性', max: 5},
+                        {name: '系统稳定性', max: 5},
+                        {name: '满意度', max: 5},
+                        {name: '持续使用意愿', max: 5}
+                    ]
+                },
+                series: [{
+                    name: '核心变量',
+                    type: 'radar',
+                    data: [{
+                        value: [4.17, 4.13, 4.06, 4.21, 4.39],
+                        name: '均值',
+                        areaStyle: {
+                            color: 'rgba(30, 80, 179, 0.3)'
+                        },
+                        lineStyle: {
+                            color: '#1E50B3'
+                        },
+                        itemStyle: {
+                            color: '#1E50B3'
+                        }
+                    }]
+                }]
+            });
+            
+            // 相关性分析热力图
+            const heatmapChart = echarts.init(document.getElementById('heatmapChart'));
+            heatmapChart.setOption({
+                title: {
+                    text: '核心变量Pearson相关系数矩阵',
+                    left: 'center'
+                },
+                tooltip: {
+                    position: 'top'
+                },
+                grid: {
+                    height: '50%',
+                    top: '10%'
+                },
+                xAxis: {
+                    type: 'category',
+                    data: ['感知有用性', '感知易用性', '系统稳定性', '满意度', '持续使用意愿'],
+                    splitArea: {
+                        show: true
+                    }
+                },
+                yAxis: {
+                    type: 'category',
+                    data: ['感知有用性', '感知易用性', '系统稳定性', '满意度', '持续使用意愿'],
+                    splitArea: {
+                        show: true
+                    }
+                },
+                visualMap: {
+                    min: 0.3,
+                    max: 1,
+                    calculable: true,
+                    orient: 'horizontal',
+                    left: 'center',
+                    bottom: '15%',
+                    inRange: {
+                        color: ['#90CAF9', '#64B5F6', '#42A5F5', '#2196F3', '#1976D2', '#1565C0', '#0D47A1']
+                    }
+                },
+                series: [{
+                    name: '相关系数',
+                    type: 'heatmap',
+                    data: [
+                        [0, 0, 1.00],
+                        [0, 1, 0.45],
+                        [0, 2, 0.41],
+                        [0, 3, 0.52],
+                        [0, 4, 0.49],
+                        [1, 0, 0.45],
+                        [1, 1, 1.00],
+                        [1, 2, 0.38],
+                        [1, 3, 0.48],
+                        [1, 4, 0.44],
+                        [2, 0, 0.41],
+                        [2, 1, 0.38],
+                        [2, 2, 1.00],
+                        [2, 3, 0.46],
+                        [2, 4, 0.42],
+                        [3, 0, 0.52],
+                        [3, 1, 0.48],
+                        [3, 2, 0.46],
+                        [3, 3, 1.00],
+                        [3, 4, 0.60],
+                        [4, 0, 0.49],
+                        [4, 1, 0.44],
+                        [4, 2, 0.42],
+                        [4, 3, 0.60],
+                        [4, 4, 1.00]
+                    ],
+                    label: {
+                        show: true,
+                        formatter: function(params) {
+                            return params.value[2].toFixed(2);
+                        }
+                    },
+                    emphasis: {
+                        itemStyle: {
+                            shadowBlur: 10,
+                            shadowColor: 'rgba(0, 0, 0, 0.5)'
+                        }
+                    }
+                }]
+            });
+            
+            // 游客群体占比饼图
+            const clusterPieChart = echarts.init(document.getElementById('clusterPieChart'));
+            clusterPieChart.setOption({
+                title: {
+                    text: '游客群体占比',
+                    left: 'center'
+                },
+                tooltip: {
+                    trigger: 'item',
+                    formatter: '{a} <br/>{b}: {c} ({d}%)'
+                },
+                legend: {
+                    orient: 'vertical',
+                    left: 'left',
+                    data: ['高认可忠诚群体', '中等认可中立群体', '低认可谨慎群体']
+                },
+                series: [{
+                    name: '群体',
+                    type: 'pie',
+                    radius: '60%',
+                    center: ['50%', '50%'],
+                    data: [
+                        {value: 120, name: '高认可忠诚群体'},
+                        {value: 100, name: '中等认可中立群体'},
+                        {value: 62, name: '低认可谨慎群体'}
+                    ],
+                    emphasis: {
+                        itemStyle: {
+                            shadowBlur: 10,
+                            shadowOffsetX: 0,
+                            shadowColor: 'rgba(0, 0, 0, 0.5)'
+                        }
+                    },
+                    itemStyle: {
+                        color: function(params) {
+                            const colors = ['#1E50B3', '#3A70C9', '#5B90E6'];
+                            return colors[params.dataIndex];
+                        }
+                    }
+                }]
+            });
+            
+            // 群体特征对比雷达图
+            const clusterRadarChart = echarts.init(document.getElementById('clusterRadarChart'));
+            clusterRadarChart.setOption({
+                title: {
+                    text: '群体特征对比',
+                    left: 'center'
+                },
+                tooltip: {},
+                legend: {
+                    data: ['高认可忠诚群体', '中等认可中立群体', '低认可谨慎群体'],
+                    bottom: 0
+                },
+                radar: {
+                    indicator: [
+                        {name: '感知有用性', max: 5},
+                        {name: '感知易用性', max: 5},
+                        {name: '系统稳定性', max: 5},
+                        {name: '满意度', max: 5},
+                        {name: '持续使用意愿', max: 5}
+                    ]
+                },
+                series: [{
+                    name: '群体特征',
+                    type: 'radar',
+                    data: [
+                        {
+                            value: [4.5, 4.4, 4.3, 4.6, 4.8],
+                            name: '高认可忠诚群体',
+                            areaStyle: {
+                                color: 'rgba(30, 80, 179, 0.3)'
+                            },
+                            lineStyle: {
+                                color: '#1E50B3'
+                            },
+                            itemStyle: {
+                                color: '#1E50B3'
+                            }
+                        },
+                        {
+                            value: [4.0, 3.9, 3.8, 4.1, 4.2],
+                            name: '中等认可中立群体',
+                            areaStyle: {
+                                color: 'rgba(255, 127, 36, 0.3)'
+                            },
+                            lineStyle: {
+                                color: '#FF7F24'
+                            },
+                            itemStyle: {
+                                color: '#FF7F24'
+                            }
+                        },
+                        {
+                            value: [3.5, 3.4, 3.3, 3.6, 3.7],
+                            name: '低认可谨慎群体',
+                            areaStyle: {
+                                color: 'rgba(76, 175, 80, 0.3)'
+                            },
+                            lineStyle: {
+                                color: '#4CAF50'
+                            },
+                            itemStyle: {
+                                color: '#4CAF50'
+                            }
+                        }
+                    ]
+                }]
+            });
+            
+            // 访谈词云
+            const wordcloudChart = echarts.init(document.getElementById('wordcloudChart'));
+            wordcloudChart.setOption({
+                title: {
+                    text: '访谈词云',
+                    left: 'center'
+                },
+                tooltip: {},
+                series: [{
+                    type: 'wordCloud',
+                    shape: 'circle',
+                    left: 'center',
+                    top: 'center',
+                    width: '70%',
+                    height: '80%',
+                    right: null,
+                    bottom: null,
+                    sizeRange: [12, 60],
+                    rotationRange: [-90, 90],
+                    rotationStep: 45,
+                    gridSize: 8,
+                    drawOutOfBound: false,
+                    textStyle: {
+                        fontFamily: 'sans-serif',
+                        fontWeight: 'bold',
+                        color: function () {
+                            return 'rgb(' + [
+                                Math.round(Math.random() * 160),
+                                Math.round(Math.random() * 160),
+                                Math.round(Math.random() * 255)
+                            ].join(',') + ')';
+                        }
+                    },
+                    emphasis: {
+                        focus: 'self',
+                        textStyle: {
+                            shadowBlur: 10,
+                            shadowColor: '#333'
+                        }
+                    },
+                    data: [
+                        {name: 'AI展项', value: 100},
+                        {name: '互动体验', value: 90},
+                        {name: '隐私保护', value: 80},
+                        {name: '老年人', value: 70},
+                        {name: '设备卡顿', value: 60},
+                        {name: '智能导览', value: 50},
+                        {name: 'VR体验', value: 45},
+                        {name: 'AR导览', value: 40},
+                        {name: '个性化', value: 35},
+                        {name: '数字鸿沟', value: 30},
+                        {name: '数据共享', value: 25},
+                        {name: '创新', value: 20},
+                        {name: '体验感', value: 15},
+                        {name: '科技感', value: 10}
+                    ]
+                }]
+            });
+            
+            // 响应式调整
+            window.addEventListener('resize', function() {
+                ageChart.resize();
+                occupationChart.resize();
+                radarChart.resize();
+                heatmapChart.resize();
+                clusterPieChart.resize();
+                clusterRadarChart.resize();
+                wordcloudChart.resize();
+            });
+        });
+    </script>
+</body>
+</html>

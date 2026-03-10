@@ -1,0 +1,2208 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>粤港澳大湾区智慧文旅调研成果展示 - 粤见未来调研队</title>
+    <style>
+        /* 马卡龙配色方案 */
+        :root {
+            --macaron-pink: #ffb3ba;
+            --macaron-blue: #bae1ff;
+            --macaron-green: #baffc9;
+            --macaron-yellow: #ffffba;
+            --macaron-purple: #d5a6bd;
+            --macaron-orange: #ffdfba;
+            --macaron-teal: #baffef;
+            --bg-color: #f9f7f7;
+            --text-color: #555;
+            --card-bg: #ffffff;
+            --accent-color: #ffb3ba;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "SimHei", "Microsoft YaHei", sans-serif;
+        }
+        /* 页面加载动画 */
+        .loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--macaron-blue), var(--macaron-pink));
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease-out, visibility 0.5s ease-out;
+        }
+        .loader.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+        .loader-content {
+            text-align: center;
+            color: white;
+        }
+        .loader-logo {
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            animation: pulse 1.5s infinite;
+        }
+        .loader-spinner {
+            width: 60px;
+            height: 60px;
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--macaron-pink);
+            animation: spin 1s ease-in-out infinite;
+            margin: 0 auto;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        /* 滚动动画 */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            font-size: 16px;
+        }
+        /* 排版优化 */
+        h1, h2, h3, h4, h5, h6 {
+            font-weight: bold;
+            line-height: 1.3;
+            margin-bottom: 1rem;
+            color: #000000;
+        }
+        p {
+            margin-bottom: 1rem;
+            line-height: 1.7;
+            color: #000000;
+            font-weight: bold;
+        }
+        /* 间距优化 */
+        .container {
+            width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+        .section {
+            margin-bottom: 40px;
+        }
+        /* 标题层级 */
+        h1 {
+            font-size: 2.5rem;
+            color: var(--macaron-pink);
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+        h2 {
+            font-size: 1.75rem;
+            color: var(--macaron-blue);
+        }
+        h3 {
+            font-size: 1.25rem;
+            color: var(--macaron-green);
+        }
+        h4 {
+            font-size: 1.1rem;
+            color: var(--macaron-purple);
+        }
+        /* 顶部导航栏 */
+        .header {
+            background: linear-gradient(90deg, var(--macaron-blue), var(--macaron-pink));
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 999;
+            transition: all 0.3s ease;
+        }
+        .header.scrolled {
+            background: rgba(186, 225, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+        }
+        /* 滚动进度条 */
+        .scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--macaron-pink), var(--macaron-blue));
+            z-index: 1000;
+            transition: width 0.1s ease;
+        }
+        .nav {
+            width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+        }
+        .logo {
+            font-size: 20px;
+            font-weight: bold;
+            color: #000000;
+            text-decoration: none;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+        }
+        .nav-list {
+            display: flex;
+            list-style: none;
+        }
+        .nav-list li {
+            margin-left: 30px;
+        }
+        .nav-list a {
+            text-decoration: none;
+            color: #000000;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.3s;
+            padding: 5px 10px;
+            border-radius: 20px;
+            background: rgba(255,255,255,0.2);
+        }
+        .nav-list a:hover {
+            background: rgba(255,255,255,0.4);
+            transform: translateY(-2px);
+        }
+        /* 汉堡菜单 */
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+        }
+        .menu-toggle span {
+            width: 25px;
+            height: 3px;
+            background-color: #000000;
+            margin: 2px 0;
+            transition: all 0.3s ease;
+        }
+        .menu-toggle.active span:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+        .menu-toggle.active span:nth-child(2) {
+            opacity: 0;
+        }
+        .menu-toggle.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(5px, -5px);
+        }
+        /* 横幅区域 */
+        .banner {
+            background: linear-gradient(135deg, var(--macaron-blue), var(--macaron-pink));
+            color: #fff;
+            text-align: center;
+            padding: 60px 0;
+            position: relative;
+            overflow: hidden;
+            border-radius: 0 0 30px 30px;
+        }
+        .banner::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="rgba(255,255,255,0.1)"/><circle cx="50" cy="50" r="40" fill="rgba(255,255,255,0.05)"/></svg>');
+            opacity: 0.3;
+        }
+        .banner h1 {
+            font-size: 36px;
+            margin-bottom: 15px;
+            position: relative;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            color: #000000;
+            font-weight: bold;
+        }
+        .banner p {
+            font-size: 18px;
+            opacity: 0.9;
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            color: #000000;
+            font-weight: bold;
+        }
+        /* 容器样式 */
+        .container {
+            width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+        /* 通用板块样式 */
+        .section {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05), 0 0 0 1px rgba(255, 255, 186, 0.2);
+            border-top: 4px solid var(--macaron-yellow);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .section:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.08), 0 0 0 1px rgba(255, 255, 186, 0.3);
+        }
+        .section-title {
+            font-size: 26px;
+            color: #000000;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 3px solid #ffffea;
+            position: relative;
+            font-weight: bold;
+        }
+        .section-title::after {
+            content: "";
+            position: absolute;
+            bottom: -3px;
+            left: 0;
+            width: 80px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--macaron-yellow), var(--macaron-blue));
+            border-radius: 3px;
+        }
+        /* 调研概况 */
+        .overview-content {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .overview-card {
+            flex: 1;
+            min-width: 250px;
+            background: linear-gradient(135deg, var(--macaron-blue), #f0f9ff);
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 1px solid #d1e9ff;
+            position: relative;
+            overflow: hidden;
+        }
+        .overview-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s ease;
+        }
+        .overview-card:hover::before {
+            left: 100%;
+        }
+        .overview-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(186, 225, 255, 0.3);
+            border-color: var(--macaron-blue);
+        }
+        .overview-card h3 {
+            font-size: 18px;
+            margin-bottom: 12px;
+            color: #555;
+            position: relative;
+            z-index: 1;
+        }
+        .overview-card p {
+            font-size: 32px;
+            font-weight: bold;
+            background: linear-gradient(90deg, var(--macaron-pink), var(--macaron-blue));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            position: relative;
+            z-index: 1;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+        @keyframes glow {
+            from { filter: drop-shadow(0 0 2px rgba(255, 179, 186, 0.5)); }
+            to { filter: drop-shadow(0 0 8px rgba(255, 179, 186, 0.8)); }
+        }
+        /* 点位详情 */
+        .spot-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 25px;
+        }
+        .spot-card {
+            flex: 1;
+            min-width: 500px;
+            border: 1px solid var(--macaron-blue);
+            border-radius: 15px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            background: var(--card-bg);
+            position: relative;
+        }
+        .spot-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border-color: var(--macaron-pink);
+        }
+        .spot-img {
+            width: 100%;
+            height: 220px;
+            background: linear-gradient(135deg, var(--macaron-yellow), #f9f9f9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #555;
+            font-size: 16px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        .spot-img:hover {
+            transform: scale(1.02);
+        }
+        /* 图片懒加载 */
+        img.lazy {
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        img.lazy.loaded {
+            opacity: 1;
+        }
+        .spot-img::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 50 50"><path d="M25 10L35 25L15 25Z" fill="rgba(255, 179, 186, 0.1)"/></svg>');
+        }
+        .spot-content {
+            padding: 25px;
+        }
+        .spot-content h3 {
+            font-size: 22px;
+            margin-bottom: 12px;
+            color: var(--macaron-purple);
+            font-weight: 600;
+        }
+        .spot-content .tag {
+            display: inline-block;
+            background: linear-gradient(90deg, var(--macaron-pink), var(--macaron-blue));
+            color: #ffffff;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            margin-right: 8px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 5px rgba(255, 179, 186, 0.2);
+            transition: all 0.3s ease;
+        }
+        .spot-content .tag:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 8px rgba(255, 179, 186, 0.3);
+        }
+        .spot-content p {
+            font-size: 15px;
+            color: #555;
+            margin-bottom: 10px;
+            line-height: 1.7;
+        }
+        /* 数据亮点 */
+        .data-content {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .data-card {
+            flex: 1;
+            min-width: 200px;
+            background: linear-gradient(135deg, var(--macaron-pink), #fef7fb);
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            border: 1px solid #fee2ec;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .data-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s ease;
+        }
+        .data-card:hover::before {
+            left: 100%;
+        }
+        .data-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(255, 179, 186, 0.3);
+            border-color: var(--macaron-pink);
+        }
+        .data-card h3 {
+            font-size: 16px;
+            margin-bottom: 10px;
+            color: #000000;
+            font-weight: bold;
+            position: relative;
+            z-index: 1;
+        }
+        .data-card p {
+            font-size: 28px;
+            font-weight: bold;
+            color: #000000;
+            position: relative;
+            z-index: 1;
+        }
+        @keyframes glow-red {
+            from { filter: drop-shadow(0 0 2px rgba(255, 179, 186, 0.5)); }
+            to { filter: drop-shadow(0 0 8px rgba(255, 179, 186, 0.8)); }
+        }
+        /* 数据可视化图表 */
+        .chart-container {
+            margin-top: 30px;
+            padding: 30px;
+            background: linear-gradient(135deg, var(--macaron-yellow), #f8f9fa);
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            border: 1px solid #f0f0f0;
+        }
+        .chart-title {
+            text-align: center;
+            margin-bottom: 30px;
+            color: var(--macaron-purple);
+            font-size: 20px;
+            font-weight: 600;
+        }
+        .bar-chart {
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-end;
+            height: 350px;
+            padding: 30px 0;
+            position: relative;
+        }
+        .bar-chart::before {
+            content: '';
+            position: absolute;
+            bottom: 60px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--macaron-pink), var(--macaron-blue));
+        }
+        .bar {
+            flex: 1;
+            margin: 0 15px;
+            border-radius: 8px 8px 0 0;
+            position: relative;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            cursor: pointer;
+        }
+        .bar:nth-child(1) {
+            background: linear-gradient(180deg, var(--macaron-pink), #ffd6da);
+        }
+        .bar:nth-child(2) {
+            background: linear-gradient(180deg, var(--macaron-blue), #d6eaff);
+        }
+        .bar:nth-child(3) {
+            background: linear-gradient(180deg, var(--macaron-green), #d6ffda);
+        }
+        .bar:nth-child(4) {
+            background: linear-gradient(180deg, var(--macaron-yellow), #ffffd6);
+        }
+        .bar:nth-child(5) {
+            background: linear-gradient(180deg, var(--macaron-purple), #e6d6ff);
+        }
+        .bar:nth-child(6) {
+            background: linear-gradient(180deg, var(--macaron-orange), #ffedd6);
+        }
+        .bar:hover {
+            transform: translateY(-8px) scaleY(1.1);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        }
+        .bar-value {
+            position: absolute;
+            top: -40px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-weight: bold;
+            color: #555;
+            font-size: 16px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 5px 10px;
+            border-radius: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .bar-label {
+            position: absolute;
+            bottom: -60px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-size: 14px;
+            color: #555;
+            font-weight: 500;
+            transform: none;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 5px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        /* 广东省智慧旅游景点推荐 */
+        .gd-tourism {
+            background: var(--card-bg);
+        }
+        .map-container {
+            width: 100%;
+            height: 500px;
+            margin-bottom: 30px;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .map-container svg {
+            width: 100%;
+            height: 100%;
+            transition: transform 0.3s ease;
+        }
+        .map-container:hover svg {
+            transform: scale(1.02);
+        }
+        .scenic-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 20px;
+        }
+        .scenic-card {
+            background: linear-gradient(135deg, var(--macaron-yellow), #fef7fb);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+            border-left: 4px solid var(--macaron-yellow);
+        }
+        .scenic-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
+        .scenic-card h4 {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            color: #555;
+        }
+        .scenic-card .city {
+            font-size: 14px;
+            color: var(--macaron-pink);
+            font-weight: normal;
+        }
+        .scenic-card .feature {
+            font-size: 14px;
+            line-height: 1.6;
+            color: #555;
+        }
+        /* 页脚 */
+        .footer {
+            background: linear-gradient(135deg, var(--macaron-blue), var(--macaron-pink));
+            color: #ffffff;
+            text-align: center;
+            padding: 30px 0;
+            margin-top: 50px;
+            border-radius: 20px 20px 0 0;
+        }
+        .footer p {
+            margin: 0;
+            font-size: 14px;
+            opacity: 0.8;
+        }
+        /* 模态框样式 */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            animation: fadeIn 0.3s ease;
+        }
+        .modal-content {
+            background-color: var(--card-bg);
+            margin: 5% auto;
+            padding: 30px;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 800px;
+            max-height: 80vh;
+            overflow-y: auto;
+            animation: slideIn 0.3s ease;
+            position: relative;
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--macaron-pink);
+        }
+        .modal-title {
+            font-size: 24px;
+            color: var(--macaron-pink);
+            font-weight: bold;
+        }
+        .close {
+            color: #aaa;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+        .close:hover {
+            color: var(--macaron-pink);
+        }
+        .modal-body {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+        .modal-image {
+            width: 100%;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .modal-info {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .info-item {
+            display: flex;
+            flex-direction: column;
+        }
+        .info-label {
+            font-weight: bold;
+            color: var(--macaron-purple);
+            margin-bottom: 5px;
+        }
+        .info-value {
+            color: #555;
+            line-height: 1.5;
+        }
+        .rating {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .star {
+            color: #ffd700;
+            font-size: 18px;
+        }
+        .攻略 {
+            grid-column: 1 / -1;
+            margin-top: 20px;
+        }
+        .攻略 h4 {
+            color: var(--macaron-blue);
+            margin-bottom: 10px;
+        }
+        .攻略-content {
+            background: linear-gradient(135deg, var(--macaron-yellow), #f8f9fa);
+            padding: 20px;
+            border-radius: 15px;
+            line-height: 1.6;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes slideIn {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        /* 智慧文旅体验 */
+        .smart-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .smart-card {
+            background: linear-gradient(135deg, var(--macaron-green), #f0f9ff);
+            padding: 25px;
+            border-radius: 15px;
+            border: 1px solid #d1e9ff;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .smart-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s ease;
+        }
+        .smart-card:hover::before {
+            left: 100%;
+        }
+        .smart-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(186, 255, 201, 0.3);
+            border-color: var(--macaron-green);
+        }
+        .smart-card h3 {
+            font-size: 18px;
+            margin-bottom: 12px;
+            color: #555;
+            position: relative;
+            z-index: 1;
+        }
+        .smart-card p {
+            font-size: 14px;
+            line-height: 1.6;
+            color: #555;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* 数字形象IP实验室 */
+        .lab-content {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .lab-services {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .lab-service-card {
+            background: linear-gradient(135deg, var(--macaron-purple), #fef7fb);
+            padding: 25px;
+            border-radius: 15px;
+            border: 1px solid #fee2ec;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .lab-service-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s ease;
+        }
+        .lab-service-card:hover::before {
+            left: 100%;
+        }
+        .lab-service-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(213, 166, 189, 0.3);
+            border-color: var(--macaron-purple);
+        }
+        .lab-service-card h3 {
+            font-size: 18px;
+            margin-bottom: 12px;
+            color: #555;
+            position: relative;
+            z-index: 1;
+        }
+        .lab-service-card p {
+            font-size: 14px;
+            line-height: 1.6;
+            color: #555;
+            position: relative;
+            z-index: 1;
+        }
+        .contact-info {
+            background: linear-gradient(135deg, var(--macaron-yellow), #f8f9fa);
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .nav {
+                width: 100%;    +
+                padding: 15px 20px;
+            }
+            .nav-list {
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background: linear-gradient(90deg, var(--macaron-blue), var(--macaron-pink));
+                flex-direction: column;
+                align-items: center;
+                padding: 20px 0;
+                box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+                transform: translateY(-100%);
+                opacity: 0;
+                visibility: hidden;
+                transition: all 0.3s ease;
+            }
+            .nav-list.active {
+                transform: translateY(0);
+                opacity: 1;
+                visibility: visible;
+            }
+            .nav-list li {
+                margin: 10px 0;
+            }
+            .menu-toggle {
+                display: flex;
+            }
+            .container {
+                width: 100%;
+            }
+            .spot-card {
+                min-width: 100%;
+            }
+            .bar-chart {
+                flex-direction: column;
+                height: auto;
+                align-items: stretch;
+            }
+            .bar {
+                height: 50px;
+                margin: 10px 0;
+            }
+            .bar-label {
+                transform: none;
+                bottom: 15px;
+            }
+            .scenic-list {
+                grid-template-columns: 1fr;
+            }
+            .modal-body {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 滚动进度条 -->
+    <div class="scroll-progress"></div>
+    
+    <!-- 页面加载动画 -->
+    <div class="loader">
+        <div class="loader-content">
+            <div class="loader-logo">粤见未来调研队</div>
+            <div class="loader-spinner"></div>
+        </div>
+    </div>
+    
+    <!-- 顶部导航栏 -->
+    <header class="header">
+        <nav class="nav">
+            <a href="#" class="logo">粤见未来调研队</a>
+            <div class="menu-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <ul class="nav-list">
+                <li><a href="#overview">调研概况</a></li>
+                <li><a href="#spot">点位详情</a></li>
+                <li><a href="#data">数据亮点</a></li>
+                <li><a href="h2.html" target="_blank">调研报告</a></li>
+                <li><a href="h3.html" target="_blank">IP设计平台</a></li>
+                <li><a href="#gd-tourism">广东智慧景点</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- 横幅区域 -->
+    <div class="banner">
+        <div style="text-align: center; margin-bottom: 20px;">
+            <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=Guangdong%20cultural%20tourism%20research%20team%20logo%2C%20blue%20abstract%20design%20with%20Chinese%20characters%20%E7%B2%A4%E8%A7%81%E6%9C%AA%E6%9D%A5%E8%B0%83%E7%A0%94%E9%98%9F%2C%20clean%20modern%20style&image_size=square" alt="粤见未来调研队" style="width: 150px; height: 150px; border-radius: 50%; border: 4px solid white; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
+        </div>
+        <h1 style="color: #000000; font-weight: bold;">粤港澳大湾区智慧文旅调研成果展示</h1>
+        <p style="color: #000000; font-weight: bold;">粤见未来调研队 · 以实践践初心，以调研探真相 · 覆盖广州、深圳四大核心点位</p>
+    </div>
+
+    <!-- 核心内容容器 -->
+    <div class="container">
+        <!-- 调研概况 -->
+        <section class="section fade-in" id="overview">
+            <h2 class="section-title">调研概况</h2>
+            <div class="overview-content">
+                <div class="overview-card fade-in">
+                    <h3>调研周期</h3>
+                    <p>16天</p>
+                </div>
+                <div class="overview-card fade-in">
+                    <h3>覆盖城市</h3>
+                    <p>2个</p>
+                </div>
+                <div class="overview-card fade-in">
+                    <h3>调研点位</h3>
+                    <p>4个</p>
+                </div>
+                <div class="overview-card fade-in">
+                    <h3>有效问卷</h3>
+                    <p>282份</p>
+                </div>
+            </div>
+            <p style="margin-top: 20px; color: #666; line-height: 1.8;" class="fade-in">本次调研围绕粤港澳大湾区智慧文旅发展现状，深入广州、深圳两大核心城市，选取深圳科学技术馆、笔架山公园、广东科学中心、海心沙科技岛四大代表性点位，通过文献梳理、实地观测、问卷发放、深度访谈等方式，全面摸清大湾区智慧文旅建设成效与现存问题，形成3万字调研报告，为行业发展提供参考。</p>
+        </section>
+
+        <!-- 点位详情 -->
+        <section class="section fade-in" id="spot">
+            <h2 class="section-title">调研点位详情</h2>
+            <div class="spot-list">
+                <!-- 深圳科学技术馆 -->
+                <div class="spot-card fade-in">
+                    <div class="spot-img">深圳科学技术馆（实拍图占位）</div>
+                    <div class="spot-content">
+                        <h3>深圳科学技术馆</h3>
+                        <span class="tag">室内科普</span>
+                        <span class="tag">AI应用</span>
+                        <p>核心亮点：AI小精灵“小科”拟人化引导，支持方言识别，响应速度快；“说出你的低碳社区”展项融合AIGC技术，探月展展示月壤样本与长征火箭回收部件，科技感突出。</p>
+                        <p>现存问题：部分导览屏反光，高峰时段AI小精灵响应易混乱，部分展项操作指引不足。</p>
+                    </div>
+                </div>
+
+                <!-- 笔架山公园 -->
+                <div class="spot-card fade-in">
+                    <div class="spot-img">笔架山公园（实拍图占位）</div>
+                    <div class="spot-content">
+                        <h3>笔架山公园</h3>
+                        <span class="tag">户外空间</span>
+                        <span class="tag">5G应用</span>
+                        <p>核心亮点：5G智慧跑道支持刷脸识别，自动记录运动数据；AR太极、体感游戏兼具娱乐与健身性，无人机外卖配送便捷，适配市民日常健身与休闲需求。</p>
+                        <p>现存问题：户外智慧设施受天气影响大，雨天易故障；部分设施标识指引不足，老年游客操作不便。</p>
+                    </div>
+                </div>
+
+                <!-- 广东科学中心 -->
+                <div class="spot-card fade-in">
+                    <div class="spot-img">广东科学中心（实拍图占位）</div>
+                    <div class="spot-content">
+                        <h3>广东科学中心</h3>
+                        <span class="tag">室内科普</span>
+                        <span class="tag">人文融合</span>
+                        <p>核心亮点：“探秘海洋”馆打造沉浸式互动场景，热力图实时避峰；《与AI同行》展通俗易懂，将抽象AI概念转化为互动体验，适合全年龄段参观。</p>
+                        <p>现存问题：部分展项操作说明简洁，低龄儿童无法独立操作；部分导览屏位置不合理，易被展品遮挡。</p>
+                    </div>
+                </div>
+
+                <!-- 海心沙科技岛 -->
+                <div class="spot-card fade-in">
+                    <div class="spot-img">海心沙科技岛（实拍图占位）</div>
+                    <div class="spot-content">
+                        <h3>海心沙科技岛</h3>
+                        <span class="tag">前沿科技</span>
+                        <span class="tag">公共服务</span>
+                        <p>核心亮点：集中展示低空飞行器、仿生机器狗、无人驾驶小巴等前沿装备；AI心肺复苏实训机器人、志愿服务大数据大屏，实现科技与公共服务融合。</p>
+                        <p>现存问题：部分智能导览屏反光严重；智慧设施维护成本高，部分装备仅用于展示，未完全开放体验。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+
+        <!-- 智慧文旅体验 -->
+        <section class="section fade-in" id="smart-experience">
+            <h2 class="section-title">智慧文旅体验</h2>
+            <div class="smart-content">
+                <a href="vr-experience.html" class="smart-card fade-in" style="text-decoration: none; color: inherit;">
+                    <h3>VR体验</h3>
+                    <p>通过虚拟现实技术，游客可以沉浸式体验广东各大景点，如在珠穆朗玛峰上俯瞰，在海底世界探索，在历史古迹中穿越时空。</p>
+                    <p>推荐体验点：深圳科学技术馆、广东科学中心</p>
+                </a>
+                <a href="ar-guide.html" class="smart-card fade-in" style="text-decoration: none; color: inherit;">
+                    <h3>AR导览</h3>
+                    <p>使用增强现实技术，游客可以通过手机或平板获取景点的详细信息，如历史背景、建筑结构、文化内涵等，让游览更加丰富多彩。</p>
+                    <p>推荐体验点：海心沙科技岛、广州塔</p>
+                </a>
+                <a href="online-museum.html" class="smart-card fade-in" style="text-decoration: none; color: inherit;">
+                    <h3>云游博物馆</h3>
+                    <p>通过线上平台，游客可以足不出户游览广东各大博物馆，欣赏珍贵文物，参与互动展览，了解广东的历史文化。</p>
+                    <p>推荐平台：广东省博物馆官网、广州博物馆数字展厅</p>
+                </a>
+                <a href="digital-collection.html" class="smart-card fade-in" style="text-decoration: none; color: inherit;">
+                    <h3>数字藏品</h3>
+                    <p>广东各大景区推出的数字藏品，结合区块链技术，为游客提供独特的纪念品，同时支持文化传承和创新。</p>
+                    <p>推荐藏品：广州塔数字纪念币、丹霞山数字门票</p>
+                </a>
+            </div>
+        </section>
+
+        <!-- 数字形象IP实验室 -->
+        <section class="section fade-in" id="ip-lab">
+            <h2 class="section-title">数字形象IP实验室</h2>
+            <div class="lab-content">
+                <p>数字形象IP实验室致力于为景区设计独特的数字形象，通过AI技术和创意设计，打造具有地方特色的文化IP，提升景区的品牌价值和吸引力。</p>
+                <div class="lab-services">
+                    <div class="lab-service-card fade-in">
+                        <h3>IP形象设计</h3>
+                        <p>为景区设计专属的数字形象，包括吉祥物、虚拟导游等，结合当地文化特色，打造独特的品牌标识。</p>
+                    </div>
+                    <div class="lab-service-card fade-in">
+                        <h3>AR互动体验</h3>
+                        <p>开发基于AR技术的互动体验，让游客与数字形象进行实时互动，增强游览的趣味性和参与感。</p>
+                    </div>
+                    <div class="lab-service-card fade-in">
+                        <h3>数字营销方案</h3>
+                        <p>为景区提供数字营销解决方案，通过社交媒体、短视频等平台，推广景区的数字形象和文化特色。</p>
+                    </div>
+                </div>
+                <p class="contact-info">
+                    <strong>合作咨询：</strong>ip_lab@yuejianweilai.com
+                </p>
+            </div>
+        </section>
+
+        <!-- 调研报告网站 -->
+        <section class="section fade-in" id="research-report">
+            <h2 class="section-title">调研报告网站</h2>
+            <div class="report-content" style="text-align: center; padding: 40px 20px; background: linear-gradient(135deg, var(--macaron-blue), var(--macaron-pink)); border-radius: 15px;">
+                <h3 style="font-size: 24px; margin-bottom: 20px; color: #000000;">粤港澳大湾区AI融合文旅调研</h3>
+                <p style="font-size: 18px; margin-bottom: 30px; color: #000000;">详细了解我们的调研成果和AI应用案例</p>
+                <a href="h2.html" style="display: inline-block; padding: 15px 40px; background: #ffffff; color: var(--macaron-purple); text-decoration: none; border-radius: 50px; font-size: 18px; font-weight: bold; transition: all 0.3s ease;">访问调研报告网站</a>
+            </div>
+        </section>
+
+        <!-- 广东省智慧旅游景点推荐 -->
+        <section class="section gd-tourism fade-in" id="gd-tourism">
+            <h2 class="section-title">广东省智慧旅游景点推荐</h2>
+            
+            <!-- 广东省旅游地图 -->
+            <div class="map-container fade-in">
+                <svg width="100%" height="100%" viewBox="0 0 800 500" xmlns="http://www.w3.org/2000/svg">
+                    <!-- 背景渐变 -->
+                    <defs>
+                        <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#f0f9ff" />
+                            <stop offset="100%" stop-color="#e8f4fd" />
+                        </linearGradient>
+                        <linearGradient id="cityGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#4facfe" />
+                            <stop offset="100%" stop-color="#00f2fe" />
+                        </linearGradient>
+                    </defs>
+                    
+                    <!-- 背景 -->
+                    <rect width="800" height="500" fill="url(#bgGradient)" rx="10" ry="10" />
+                    
+                    <!-- 广东省轮廓 -->
+                    <path d="M200,180 Q240,140 280,160 Q320,140 360,160 Q400,140 440,160 Q480,140 520,160 Q560,140 600,160 Q640,140 680,160 Q720,180 740,220 Q760,260 740,300 Q720,340 680,360 Q640,380 600,360 Q560,340 520,360 Q480,380 440,360 Q400,340 360,360 Q320,380 280,360 Q240,340 200,360 Q160,380 140,340 Q120,300 140,260 Q160,220 200,180 Z" 
+                          fill="#ffffff" stroke="#4facfe" stroke-width="2" />
+                    
+                    <!-- 主要城市 -->
+                    <!-- 广州 -->
+                    <circle cx="400" cy="260" r="8" fill="url(#cityGradient)" stroke="#ffffff" stroke-width="2" style="cursor: pointer;" onclick="showCitySpots('广州')" />
+                    <text x="400" y="255" text-anchor="middle" fill="#000000" font-weight="bold" style="cursor: pointer;" onclick="showCitySpots('广州')">广州</text>
+                    <text x="400" y="275" text-anchor="middle" fill="#000000" font-size="12" font-weight="bold">长隆、广州塔</text>
+                    
+                    <!-- 深圳 -->
+                    <circle cx="580" cy="320" r="8" fill="url(#cityGradient)" stroke="#ffffff" stroke-width="2" style="cursor: pointer;" onclick="showCitySpots('深圳')" />
+                    <text x="580" y="315" text-anchor="middle" fill="#000000" font-weight="bold" style="cursor: pointer;" onclick="showCitySpots('深圳')">深圳</text>
+                    <text x="580" y="335" text-anchor="middle" fill="#000000" font-size="12" font-weight="bold">华侨城、欢乐谷</text>
+                    
+                    <!-- 珠海 -->
+                    <circle cx="440" cy="360" r="8" fill="url(#cityGradient)" stroke="#ffffff" stroke-width="2" style="cursor: pointer;" onclick="showCitySpots('珠海')" />
+                    <text x="440" y="355" text-anchor="middle" fill="#000000" font-weight="bold" style="cursor: pointer;" onclick="showCitySpots('珠海')">珠海</text>
+                    <text x="440" y="375" text-anchor="middle" fill="#000000" font-size="12" font-weight="bold">长隆海洋王国</text>
+                    
+                    <!-- 佛山 -->
+                    <circle cx="360" cy="280" r="8" fill="url(#cityGradient)" stroke="#ffffff" stroke-width="2" style="cursor: pointer;" onclick="showCitySpots('佛山')" />
+                    <text x="360" y="275" text-anchor="middle" fill="#000000" font-weight="bold" style="cursor: pointer;" onclick="showCitySpots('佛山')">佛山</text>
+                    <text x="360" y="295" text-anchor="middle" fill="#000000" font-size="12" font-weight="bold">岭南天地</text>
+                    
+                    <!-- 中山 -->
+                    <circle cx="420" cy="320" r="8" fill="url(#cityGradient)" stroke="#ffffff" stroke-width="2" style="cursor: pointer;" onclick="showCitySpots('中山')" />
+                    <text x="420" y="315" text-anchor="middle" fill="#000000" font-weight="bold" style="cursor: pointer;" onclick="showCitySpots('中山')">中山</text>
+                    <text x="420" y="335" text-anchor="middle" fill="#000000" font-size="12" font-weight="bold">孙中山故里</text>
+                    
+                    <!-- 惠州 -->
+                    <circle cx="480" cy="280" r="8" fill="url(#cityGradient)" stroke="#ffffff" stroke-width="2" style="cursor: pointer;" onclick="showCitySpots('惠州')" />
+                    <text x="480" y="275" text-anchor="middle" fill="#000000" font-weight="bold" style="cursor: pointer;" onclick="showCitySpots('惠州')">惠州</text>
+                    <text x="480" y="295" text-anchor="middle" fill="#000000" font-size="12" font-weight="bold">巽寮湾</text>
+                    
+                    <!-- 潮州 -->
+                    <circle cx="600" cy="180" r="8" fill="url(#cityGradient)" stroke="#ffffff" stroke-width="2" style="cursor: pointer;" onclick="showCitySpots('潮州')" />
+                    <text x="600" y="175" text-anchor="middle" fill="#000000" font-weight="bold" style="cursor: pointer;" onclick="showCitySpots('潮州')">潮州</text>
+                    <text x="600" y="195" text-anchor="middle" fill="#000000" font-size="12" font-weight="bold">牌坊街、广济桥</text>
+                    
+                    <!-- 汕头 -->
+                    <circle cx="640" cy="180" r="8" fill="url(#cityGradient)" stroke="#ffffff" stroke-width="2" style="cursor: pointer;" onclick="showCitySpots('汕头')" />
+                    <text x="640" y="175" text-anchor="middle" fill="#000000" font-weight="bold" style="cursor: pointer;" onclick="showCitySpots('汕头')">汕头</text>
+                    <text x="640" y="195" text-anchor="middle" fill="#000000" font-size="12" font-weight="bold">南澳岛、小公园</text>
+                    
+                    <!-- 韶关 -->
+                    <circle cx="280" cy="160" r="8" fill="url(#cityGradient)" stroke="#ffffff" stroke-width="2" style="cursor: pointer;" onclick="showCitySpots('韶关')" />
+                    <text x="280" y="155" text-anchor="middle" fill="#000000" font-weight="bold" style="cursor: pointer;" onclick="showCitySpots('韶关')">韶关</text>
+                    <text x="280" y="175" text-anchor="middle" fill="#000000" font-size="12" font-weight="bold">丹霞山、南华寺</text>
+                    
+                    <!-- 肇庆 -->
+                    <circle cx="320" cy="320" r="8" fill="url(#cityGradient)" stroke="#ffffff" stroke-width="2" style="cursor: pointer;" onclick="showCitySpots('肇庆')" />
+                    <text x="320" y="315" text-anchor="middle" fill="#000000" font-weight="bold" style="cursor: pointer;" onclick="showCitySpots('肇庆')">肇庆</text>
+                    <text x="320" y="335" text-anchor="middle" fill="#000000" font-size="12" font-weight="bold">七星岩、鼎湖山</text>
+                    
+                    <!-- 清远 -->
+                    <circle cx="320" cy="200" r="8" fill="url(#cityGradient)" stroke="#ffffff" stroke-width="2" style="cursor: pointer;" onclick="showCitySpots('清远')" />
+                    <text x="320" y="195" text-anchor="middle" fill="#000000" font-weight="bold" style="cursor: pointer;" onclick="showCitySpots('清远')">清远</text>
+                    <text x="320" y="215" text-anchor="middle" fill="#000000" font-size="12" font-weight="bold">漂流、温泉</text>
+                    
+                    <!-- 湛江 -->
+                    <circle cx="200" cy="360" r="8" fill="#bae1ff" stroke="#ffffff" stroke-width="2" style="cursor: pointer;" onclick="showCitySpots('湛江')" />
+                    <text x="200" y="355" text-anchor="middle" fill="#000000" font-weight="bold" style="cursor: pointer;" onclick="showCitySpots('湛江')">湛江</text>
+                    
+                    <!-- 茂名 -->
+                    <circle cx="220" cy="320" r="8" fill="#bae1ff" stroke="#ffffff" stroke-width="2" style="cursor: pointer;" onclick="showCitySpots('茂名')" />
+                    <text x="220" y="315" text-anchor="middle" fill="#000000" font-weight="bold" style="cursor: pointer;" onclick="showCitySpots('茂名')">茂名</text>
+                    
+                    <!-- 阳江 -->
+                    <circle cx="260" cy="340" r="8" fill="#bae1ff" stroke="#ffffff" stroke-width="2" style="cursor: pointer;" onclick="showCitySpots('阳江')" />
+                    <text x="260" y="335" text-anchor="middle" fill="#000000" font-weight="bold" style="cursor: pointer;" onclick="showCitySpots('阳江')">阳江</text>
+                    
+                    <!-- 云浮 -->
+                    <circle cx="280" cy="280" r="8" fill="#bae1ff" stroke="#ffffff" stroke-width="2" style="cursor: pointer;" onclick="showCitySpots('云浮')" />
+                    <text x="280" y="275" text-anchor="middle" fill="#000000" font-weight="bold" style="cursor: pointer;" onclick="showCitySpots('云浮')">云浮</text>
+                    
+                    <!-- 江门 -->
+                    <circle cx="360" cy="340" r="8" fill="#bae1ff" stroke="#ffffff" stroke-width="2" style="cursor: pointer;" onclick="showCitySpots('江门')" />
+                    <text x="360" y="335" text-anchor="middle" fill="#000000" font-weight="bold" style="cursor: pointer;" onclick="showCitySpots('江门')">江门</text>
+                    
+                    <!-- 东莞 -->
+                    <circle cx="440" cy="300" r="8" fill="#bae1ff" stroke="#ffffff" stroke-width="2" style="cursor: pointer;" onclick="showCitySpots('东莞')" />
+                    <text x="440" y="295" text-anchor="middle" fill="#000000" font-weight="bold" style="cursor: pointer;" onclick="showCitySpots('东莞')">东莞</text>
+                    
+                    <!-- 梅州 -->
+                    <circle cx="560" cy="160" r="8" fill="#bae1ff" stroke="#ffffff" stroke-width="2" style="cursor: pointer;" onclick="showCitySpots('梅州')" />
+                    <text x="560" y="155" text-anchor="middle" fill="#000000" font-weight="bold" style="cursor: pointer;" onclick="showCitySpots('梅州')">梅州</text>
+                    
+                    <!-- 河源 -->
+                    <circle cx="480" cy="200" r="8" fill="#bae1ff" stroke="#ffffff" stroke-width="2" style="cursor: pointer;" onclick="showCitySpots('河源')" />
+                    <text x="480" y="195" text-anchor="middle" fill="#000000" font-weight="bold" style="cursor: pointer;" onclick="showCitySpots('河源')">河源</text>
+                    
+                    <!-- 揭阳 -->
+                    <circle cx="580" cy="200" r="8" fill="#bae1ff" stroke="#ffffff" stroke-width="2" style="cursor: pointer;" onclick="showCitySpots('揭阳')" />
+                    <text x="580" y="195" text-anchor="middle" fill="#000000" font-weight="bold" style="cursor: pointer;" onclick="showCitySpots('揭阳')">揭阳</text>
+                    
+                    <!-- 汕尾 -->
+                    <circle cx="520" cy="300" r="8" fill="#bae1ff" stroke="#ffffff" stroke-width="2" style="cursor: pointer;" onclick="showCitySpots('汕尾')" />
+                    <text x="520" y="295" text-anchor="middle" fill="#000000" font-weight="bold" style="cursor: pointer;" onclick="showCitySpots('汕尾')">汕尾</text>
+                    
+                    <!-- 地图标题 -->
+                    <text x="400" y="50" text-anchor="middle" fill="#000000" font-size="24" font-weight="bold">广东省智慧旅游地图</text>
+                    
+                    <!-- 装饰元素 -->
+                    <path d="M100,400 Q200,380 300,400 Q400,420 500,400 Q600,380 700,400" 
+                          fill="none" stroke="#4facfe" stroke-width="2" stroke-dasharray="5,5" />
+                    <text x="400" y="440" text-anchor="middle" fill="#666" font-size="14">数据来源：广东省文旅厅</text>
+                </svg>
+            </div>
+
+            <!-- 智慧旅游景点列表 -->
+            <div class="scenic-list">
+                <!-- 广州 -->
+                <div class="scenic-card fade-in" onclick="openModal('changlong')" style="cursor: pointer;">
+                    <h4>长隆旅游度假区<span class="city">广州</span></h4>
+                    <div class="feature"><strong>智慧亮点：</strong>智能导览系统、电子票务、客流实时监控、AI人脸识别入园、智能停车系统，全程无接触游玩体验。</div>
+                </div>
+
+                <div class="scenic-card fade-in" onclick="openModal('guangzhouta')" style="cursor: pointer;">
+                    <h4>广州塔<span class="city">广州</span></h4>
+                    <div class="feature"><strong>智慧亮点：</strong>AR导览、云端VR观景、智能排队系统、小程序一键购票+预约，实时显示电梯等候时长。</div>
+                </div>
+
+                <!-- 深圳 -->
+                <div class="scenic-card fade-in" onclick="openModal('huanlehaian')" style="cursor: pointer;">
+                    <h4>华侨城欢乐海岸<span class="city">深圳</span></h4>
+                    <div class="feature"><strong>智慧亮点：</strong>5G全覆盖、智能手环消费、AR互动体验、智慧安防系统，打造沉浸式智慧文旅体验。</div>
+                </div>
+
+                <div class="scenic-card fade-in" onclick="openModal('huanlegu')" style="cursor: pointer;">
+                    <h4>深圳欢乐谷<span class="city">深圳</span></h4>
+                    <div class="feature"><strong>智慧亮点：</strong>智能储物柜、线上预约游玩项目、实时项目排队时长查询、AI智能客服解答游玩问题。</div>
+                </div>
+
+                <!-- 珠海 -->
+                <div class="scenic-card fade-in" onclick="openModal('zhuhailong')" style="cursor: pointer;">
+                    <h4>珠海长隆海洋王国<span class="city">珠海</span></h4>
+                    <div class="feature"><strong>智慧亮点：</strong>智能导览小程序、电子讲解器、AI海洋生物识别、智能餐饮推荐，亲子游玩智慧化服务。</div>
+                </div>
+
+                <!-- 佛山 -->
+                <div class="scenic-card fade-in" onclick="openModal('lingnan')" style="cursor: pointer;">
+                    <h4>岭南天地<span class="city">佛山</span></h4>
+                    <div class="feature"><strong>智慧亮点：</strong>AR非遗体验、智慧导览、电子讲解、小程序打卡集章，传统文化与现代科技融合。</div>
+                </div>
+
+                <!-- 中山 -->
+                <div class="scenic-card fade-in" onclick="openModal('sunzhongshan')" style="cursor: pointer;">
+                    <h4>孙中山故里旅游区<span class="city">中山</span></h4>
+                    <div class="feature"><strong>智慧亮点：</strong>VR重现历史场景、智能语音讲解、线上虚拟展馆、智慧停车与客流管理系统。</div>
+                </div>
+
+                <!-- 惠州 -->
+                <div class="scenic-card fade-in" onclick="openModal('xunliaowan')" style="cursor: pointer;">
+                    <h4>巽寮湾旅游区<span class="city">惠州</span></h4>
+                    <div class="feature"><strong>智慧亮点：</strong>智慧民宿预订、智能沙滩清洁系统、水上运动智能预约、海洋环境实时监测。</div>
+                </div>
+
+                <!-- 潮州 -->
+                <div class="scenic-card fade-in" onclick="openModal('paifangjie')" style="cursor: pointer;">
+                    <h4>潮州牌坊街<span class="city">潮州</span></h4>
+                    <div class="feature"><strong>智慧亮点：</strong>AR导览系统、智能讲解、线上预约、文化体验互动屏，传统文化与现代科技融合。</div>
+                </div>
+
+                <div class="scenic-card fade-in" onclick="openModal('guangjiqiao')" style="cursor: pointer;">
+                    <h4>广济桥<span class="city">潮州</span></h4>
+                    <div class="feature"><strong>智慧亮点：</strong>智能灯光秀、VR历史重现、线上购票、实时客流监控，古桥与现代科技结合。</div>
+                </div>
+
+                <!-- 汕头 -->
+                <div class="scenic-card fade-in" onclick="openModal('nan'ao')" style="cursor: pointer;">
+                    <h4>南澳岛旅游区<span class="city">汕头</span></h4>
+                    <div class="feature"><strong>智慧亮点：</strong>智能停车场、线上预约、AI景点推荐、实时天气监测，海岛旅游智慧化服务。</div>
+                </div>
+
+                <!-- 韶关 -->
+                <div class="scenic-card fade-in" onclick="openModal('danxiashan')" style="cursor: pointer;">
+                    <h4>丹霞山风景区<span class="city">韶关</span></h4>
+                    <div class="feature"><strong>智慧亮点：</strong>智能导览、VR观景、线上购票、实时客流监测、生态环境监测系统。</div>
+                </div>
+
+                <!-- 肇庆 -->
+                <div class="scenic-card fade-in" onclick="openModal('qixingyan')" style="cursor: pointer;">
+                    <h4>七星岩景区<span class="city">肇庆</span></h4>
+                    <div class="feature"><strong>智慧亮点：</strong>智能导览、AR讲解、线上预约、实时船票管理、智慧厕所系统。</div>
+                </div>
+
+                <!-- 清远 -->
+                <div class="scenic-card fade-in" onclick="openModal('qingyuan')" style="cursor: pointer;">
+                    <h4>清远漂流景区<span class="city">清远</span></h4>
+                    <div class="feature"><strong>智慧亮点：</strong>线上预约、智能排队、实时水位监测、安全预警系统、电子储物柜。</div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 调研报告PDF链接 -->
+        <section class="section fade-in" id="report">
+            <h2 class="section-title">调研报告</h2>
+            <div style="text-align: center; padding: 40px; background: linear-gradient(135deg, var(--macaron-yellow), #fef7fb); border-radius: 15px; margin-top: 20px;">
+                <p style="font-size: 16px; color: #555; margin-bottom: 30px; line-height: 1.6;">本次调研形成了3万字的详细报告，包含现状分析、问题诊断、对策建议等内容，为粤港澳大湾区智慧文旅发展提供参考。</p>
+                <a href="#" class="report-link" style="display: inline-block; padding: 20px 40px; background: linear-gradient(90deg, var(--macaron-pink), var(--macaron-blue)); color: white; text-decoration: none; border-radius: 30px; font-size: 20px; font-weight: bold; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(255, 179, 186, 0.3); position: relative; overflow: hidden;">
+                    <span style="position: relative; z-index: 1;">下载调研报告PDF</span>
+                    <span style="position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent); transition: left 0.5s ease;"></span>
+                </a>
+                <p style="font-size: 14px; color: #888; margin-top: 20px;">* 报告内容仅供参考，版权归粤见未来调研队所有</p>
+            </div>
+        </section>
+    </div>
+
+    <!-- 景点详情模态框 -->
+    <!-- 长隆旅游度假区 -->
+    <div id="changlong" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">长隆旅游度假区</h2>
+                <span class="close" onclick="closeModal('changlong')">&times;</span>
+            </div>
+            <div class="modal-body">
+                <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=Guangzhou%20Chimelong%20Tourist%20Resort%20with%20roller%20coasters%20and%20amusement%20park%20rides%2C%20colorful%20and%20vibrant%2C%20daytime%20view&image_size=landscape_16_9" alt="长隆旅游度假区" class="modal-image">
+                <div class="modal-info">
+                    <div class="info-item">
+                        <div class="info-label">价格</div>
+                        <div class="info-value">门票：280-380元/人</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">地理位置</div>
+                        <div class="info-value">广州市番禺区迎宾路长隆旅游度假区</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">交通工具</div>
+                        <div class="info-value">地铁：3号线汉溪长隆站；公交：番125路、番163路</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">推荐指数</div>
+                        <div class="info-value">
+                            <div class="rating">
+                                <span class="star">★</span>
+                                <span class="star">★</span>
+                                <span class="star">★</span>
+                                <span class="star">★</span>
+                                <span class="star">★</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="攻略">
+                    <h4>旅游攻略</h4>
+                    <div class="攻略-content">
+                        <p><strong>最佳游玩时间：</strong>春秋季节，气候适宜，避开夏季高温和节假日人流高峰。</p>
+                        <p><strong>游玩路线：</strong>建议先玩过山车等刺激项目，再游览动物展区，最后观看演出。</p>
+                        <p><strong>注意事项：</strong>提前下载长隆APP，可实时查看项目排队情况；带好防晒用品和舒适的鞋子；园区内餐饮价格较高，可考虑自带零食。</p>
+                        <p><strong>智慧服务：</strong>使用AI人脸识别入园，通过APP实时查看排队时长，智能导览系统规划最佳路线。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 广州塔 -->
+    <div id="guangzhouta" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">广州塔</h2>
+                <span class="close" onclick="closeModal('guangzhouta')">&times;</span>
+            </div>
+            <div class="modal-body">
+                <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=Canton%20Tower%20in%20Guangzhou%2C%20tall%20modern%20skyscraper%20with%20twisted%20design%2C%20daytime%20view%20with%20blue%20sky&image_size=landscape_16_9" alt="广州塔" class="modal-image">
+                <div class="modal-info">
+                    <div class="info-item">
+                        <div class="info-label">价格</div>
+                        <div class="info-value">观光厅：150-280元/人</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">地理位置</div>
+                        <div class="info-value">广州市海珠区阅江西路222号</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">交通工具</div>
+                        <div class="info-value">地铁：3号线或APM线广州塔站；公交：121路、204路</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">推荐指数</div>
+                        <div class="info-value">
+                            <div class="rating">
+                                <span class="star">★</span>
+                                <span class="star">★</span>
+                                <span class="star">★</span>
+                                <span class="star">★</span>
+                                <span class="star">☆</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="攻略">
+                    <h4>旅游攻略</h4>
+                    <div class="攻略-content">
+                        <p><strong>最佳游玩时间：</strong>傍晚时分，可欣赏日落和夜景，建议提前1-2小时到达。</p>
+                        <p><strong>游玩路线：</strong>先参观观景台，再体验高空项目，最后在塔顶餐厅用餐。</p>
+                        <p><strong>注意事项：</strong>天气不佳时可能会关闭部分高空项目；塔顶风大，注意保暖；提前在小程序购票，避免排队。</p>
+                        <p><strong>智慧服务：</strong>使用AR导览了解广州塔历史，通过小程序实时查看电梯等候时长，云端VR观景体验。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 华侨城欢乐海岸 -->
+    <div id="huanlehaian" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">华侨城欢乐海岸</h2>
+                <span class="close" onclick="closeModal('huanlehaian')">&times;</span>
+            </div>
+            <div class="modal-body">
+                <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=Shenzhen%20OCT%20Harbor%20with%20modern%20buildings%2C%20waterfront%20area%2C%20colorful%20lights%20and%20pedestrian%20walkways&image_size=landscape_16_9" alt="华侨城欢乐海岸" class="modal-image">
+                <div class="modal-info">
+                    <div class="info-item">
+                        <div class="info-label">价格</div>
+                        <div class="info-value">免费入场，内部项目收费</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">地理位置</div>
+                        <div class="info-value">深圳市南山区滨海大道2008号</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">交通工具</div>
+                        <div class="info-value">地铁：9号线深圳湾公园站；公交：M486路、M519路</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">推荐指数</div>
+                        <div class="info-value">
+                            <div class="rating">
+                                <span class="star">★</span>
+                                <span class="star">★</span>
+                                <span class="star">★</span>
+                                <span class="star">★</span>
+                                <span class="star">☆</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="攻略">
+                    <h4>旅游攻略</h4>
+                    <div class="攻略-content">
+                        <p><strong>最佳游玩时间：</strong>下午到晚上，可欣赏日落和灯光秀。</p>
+                        <p><strong>游玩路线：</strong>先逛购物中心，再到海边散步，最后观看水秀表演。</p>
+                        <p><strong>注意事项：</strong>周末人流量大，建议错峰出行；夜晚海边风大，注意保暖；部分区域需要预约进入。</p>
+                        <p><strong>智慧服务：</strong>5G全覆盖，使用智能手环消费，AR互动体验，智慧安防系统。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 深圳欢乐谷 -->
+    <div id="huanlegu" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">深圳欢乐谷</h2>
+                <span class="close" onclick="closeModal('huanlegu')">&times;</span>
+            </div>
+            <div class="modal-body">
+                <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=Shenzhen%20Happy%20Valley%20amusement%20park%20with%20roller%20coasters%20and%20colorful%20rides%2C%20daytime%20view&image_size=landscape_16_9" alt="深圳欢乐谷" class="modal-image">
+                <div class="modal-info">
+                    <div class="info-item">
+                        <div class="info-label">价格</div>
+                        <div class="info-value">门票：220-280元/人</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">地理位置</div>
+                        <div class="info-value">深圳市南山区华侨城侨城西街1号</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">交通工具</div>
+                        <div class="info-value">地铁：1号线世界之窗站；公交：21路、26路</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">推荐指数</div>
+                        <div class="info-value">
+                            <div class="rating">
+                                <span class="star">★</span>
+                                <span class="star">★</span>
+                                <span class="star">★</span>
+                                <span class="star">★</span>
+                                <span class="star">☆</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="攻略">
+                    <h4>旅游攻略</h4>
+                    <div class="攻略-content">
+                        <p><strong>最佳游玩时间：</strong>工作日，避开周末和节假日人流高峰。</p>
+                        <p><strong>游玩路线：</strong>建议从入口开始顺时针游览，先玩热门项目，再游览其他区域。</p>
+                        <p><strong>注意事项：</strong>带好防晒用品和舒适的鞋子；园区内餐饮价格较高，可考虑自带零食；部分项目有身高限制。</p>
+                        <p><strong>智慧服务：</strong>线上预约游玩项目，实时项目排队时长查询，AI智能客服解答游玩问题。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 珠海长隆海洋王国 -->
+    <div id="zhuhailong" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">珠海长隆海洋王国</h2>
+                <span class="close" onclick="closeModal('zhuhailong')">&times;</span>
+            </div>
+            <div class="modal-body">
+                <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=Zhuhai%20Chimelong%20Ocean%20Kingdom%20with%20aquariums%20and%20marine%20animals%2C%20colorful%20themed%20areas%2C%20daytime%20view&image_size=landscape_16_9" alt="珠海长隆海洋王国" class="modal-image">
+                <div class="modal-info">
+                    <div class="info-item">
+                        <div class="info-label">价格</div>
+                        <div class="info-value">门票：350-450元/人</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">地理位置</div>
+                        <div class="info-value">珠海市横琴新区富祥湾</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">交通工具</div>
+                        <div class="info-value">公交：K10路、K11路；自驾：导航至珠海长隆海洋王国</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">推荐指数</div>
+                        <div class="info-value">
+                            <div class="rating">
+                                <span class="star">★</span>
+                                <span class="star">★</span>
+                                <span class="star">★</span>
+                                <span class="star">★</span>
+                                <span class="star">★</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="攻略">
+                    <h4>旅游攻略</h4>
+                    <div class="攻略-content">
+                        <p><strong>最佳游玩时间：</strong>非节假日，建议安排2天时间游玩。</p>
+                        <p><strong>游玩路线：</strong>先参观水族馆，再体验游乐设施，最后观看海洋动物表演。</p>
+                        <p><strong>注意事项：</strong>带好防晒用品和泳衣；园区内餐饮价格较高，可考虑自带零食；部分项目有身高限制。</p>
+                        <p><strong>智慧服务：</strong>智能导览小程序，电子讲解器，AI海洋生物识别，智能餐饮推荐。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 岭南天地 -->
+    <div id="lingnan" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">岭南天地</h2>
+                <span class="close" onclick="closeModal('lingnan')">&times;</span>
+            </div>
+            <div class="modal-body">
+                <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=Foshan%20Lingnan%20Tiandi%20with%20traditional%20Chinese%20architecture%2C%20pedestrian%20streets%2C%20red%20walls%20and%20black%20tiles%2C%20daytime%20view&image_size=landscape_16_9" alt="岭南天地" class="modal-image">
+                <div class="modal-info">
+                    <div class="info-item">
+                        <div class="info-label">价格</div>
+                        <div class="info-value">免费入场</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">地理位置</div>
+                        <div class="info-value">佛山市禅城区祖庙路29号</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">交通工具</div>
+                        <div class="info-value">地铁：广佛线祖庙站；公交：105路、117路</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">推荐指数</div>
+                        <div class="info-value">
+                            <div class="rating">
+                                <span class="star">★</span>
+                                <span class="star">★</span>
+                                <span class="star">★</span>
+                                <span class="star">★</span>
+                                <span class="star">☆</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="攻略">
+                    <h4>旅游攻略</h4>
+                    <div class="攻略-content">
+                        <p><strong>最佳游玩时间：</strong>下午到晚上，可欣赏白天和夜晚的不同景色。</p>
+                        <p><strong>游玩路线：</strong>从北门进入，沿着主街游览，参观历史建筑，品尝当地美食。</p>
+                        <p><strong>注意事项：</strong>周末人流量大，建议错峰出行；部分店铺需要预约；尊重历史建筑，不要随意涂鸦。</p>
+                        <p><strong>智慧服务：</strong>AR非遗体验，智慧导览，电子讲解，小程序打卡集章。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 孙中山故里旅游区 -->
+    <div id="sunzhongshan" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">孙中山故里旅游区</h2>
+                <span class="close" onclick="closeModal('sunzhongshan')">&times;</span>
+            </div>
+            <div class="modal-body">
+                <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=Sun%20Yat-sen%20Hometown%20Tourist%20Area%20with%20traditional%20Chinese%20buildings%2C%20green%20gardens%2C%20memorial%20museum%2C%20daytime%20view&image_size=landscape_16_9" alt="孙中山故里旅游区" class="modal-image">
+                <div class="modal-info">
+                    <div class="info-item">
+                        <div class="info-label">价格</div>
+                        <div class="info-value">免费入场，部分展馆收费</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">地理位置</div>
+                        <div class="info-value">中山市南朗街道翠亨村</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">交通工具</div>
+                        <div class="info-value">公交：K16路、212路；自驾：导航至孙中山故里旅游区</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">推荐指数</div>
+                        <div class="info-value">
+                            <div class="rating">
+                                <span class="star">★</span>
+                                <span class="star">★</span>
+                                <span class="star">★</span>
+                                <span class="star">★</span>
+                                <span class="star">☆</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="攻略">
+                    <h4>旅游攻略</h4>
+                    <div class="攻略-content">
+                        <p><strong>最佳游玩时间：</strong>上午，避开下午的高温。</p>
+                        <p><strong>游玩路线：</strong>先参观孙中山故居，再游览纪念馆，最后到翠亨村古街。</p>
+                        <p><strong>注意事项：</strong>尊重历史文化，保持安静；带好防晒用品和水；部分区域需要预约。</p>
+                        <p><strong>智慧服务：</strong>VR重现历史场景，智能语音讲解，线上虚拟展馆，智慧停车与客流管理系统。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 巽寮湾旅游区 -->
+    <div id="xunliaowan" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">巽寮湾旅游区</h2>
+                <span class="close" onclick="closeModal('xunliaowan')">&times;</span>
+            </div>
+            <div class="modal-body">
+                <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=Xunliao%20Bay%20tourist%20area%20with%20white%20sand%20beach%2C%20clear%20blue%20water%2C%20palm%20trees%2C%20daytime%20view&image_size=landscape_16_9" alt="巽寮湾旅游区" class="modal-image">
+                <div class="modal-info">
+                    <div class="info-item">
+                        <div class="info-label">价格</div>
+                        <div class="info-value">免费入场，住宿和项目收费</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">地理位置</div>
+                        <div class="info-value">惠州市惠东县巽寮湾</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">交通工具</div>
+                        <div class="info-value">自驾：导航至巽寮湾旅游区；大巴：惠州汽车总站有直达班车</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">推荐指数</div>
+                        <div class="info-value">
+                            <div class="rating">
+                                <span class="star">★</span>
+                                <span class="star">★</span>
+                                <span class="star">★</span>
+                                <span class="star">★</span>
+                                <span class="star">☆</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="攻略">
+                    <h4>旅游攻略</h4>
+                    <div class="攻略-content">
+                        <p><strong>最佳游玩时间：</strong>夏季，适合海滩活动。</p>
+                        <p><strong>游玩路线：</strong>先在沙滩游玩，再体验水上项目，最后品尝海鲜。</p>
+                        <p><strong>注意事项：</strong>带好泳衣和防晒用品；注意潮汐时间；选择正规的海鲜餐厅。</p>
+                        <p><strong>智慧服务：</strong>智慧民宿预订，智能沙滩清洁系统，水上运动智能预约，海洋环境实时监测。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 潮州牌坊街 -->
+    <div id="paifangjie" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">潮州牌坊街</h2>
+                <span class="close" onclick="closeModal('paifangjie')">&times;</span>
+            </div>
+            <div class="modal-body">
+                <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=Chaozhou%20Paifang%20Street%20with%20traditional%20Chinese%20archways%2C%20pedestrian%20street%2C%20traditional%20shops%2C%20daytime%20view&image_size=landscape_16_9" alt="潮州牌坊街" class="modal-image">
+                <div class="modal-info">
+                    <div class="info-item">
+                        <div class="info-label">价格</div>
+                        <div class="info-value">免费入场</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">地理位置</div>
+                        <div class="info-value">潮州市湘桥区牌坊街</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">交通工具</div>
+                        <div class="info-value">公交：1路、3路；打车：直接导航至牌坊街</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">推荐指数</div>
+                        <div class="info-value">
+                            <div class="rating">
+                                <span class="star">★</span>
+                                <span class="star">★</span>
+                                <span class="star">★</span>
+                                <span class="star">★</span>
+                                <span class="star">★</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="攻略">
+                    <h4>旅游攻略</h4>
+                    <div class="攻略-content">
+                        <p><strong>最佳游玩时间：</strong>下午到晚上，可欣赏白天和夜晚的不同景色。</p>
+                        <p><strong>游玩路线：</strong>从北端进入，沿着主街游览，参观牌坊和传统店铺。</p>
+                        <p><strong>注意事项：</strong>周末人流量大，建议错峰出行；品尝当地美食，如潮州牛肉丸、凤凰单丛茶；尊重当地文化习俗。</p>
+                        <p><strong>智慧服务：</strong>AR导览系统，智能讲解，线上预约，文化体验互动屏。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 广济桥 -->
+    <div id="guangjiqiao" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">广济桥</h2>
+                <span class="close" onclick="closeModal('guangjiqiao')">&times;</span>
+            </div>
+            <div class="modal-body">
+                <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=Guangji%20Bridge%20in%20Chaozhou%2C%20traditional%20Chinese%20bridge%20with%20pavilions%2C%20crossing%20river%2C%20daytime%20view&image_size=landscape_16_9" alt="广济桥" class="modal-image">
+                <div class="modal-info">
+                    <div class="info-item">
+                        <div class="info-label">价格</div>
+                        <div class="info-value">门票：60元/人</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">地理位置</div>
+                        <div class="info-value">潮州市湘桥区环城东路</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">交通工具</div>
+                        <div class="info-value">公交：1路、3路；打车：直接导航至广济桥</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">推荐指数</div>
+                        <div class="info-value">
+                            <div class="rating">
+                                <span class="star">★</span>
+                                <span class="star">★</span>
+                                <span class="star">★</span>
+                                <span class="star">★</span>
+                                <span class="star">★</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="攻略">
+                    <h4>旅游攻略</h4>
+                    <div class="攻略-content">
+                        <p><strong>最佳游玩时间：</strong>傍晚，可欣赏日落和灯光秀。</p>
+                        <p><strong>游玩路线：</strong>从东岸进入，步行过桥，欣赏桥上的亭台楼阁。</p>
+                        <p><strong>注意事项：</strong>注意桥的开合时间；带好相机拍照；夜晚风大，注意保暖。</p>
+                        <p><strong>智慧服务：</strong>智能灯光秀，VR历史重现，线上购票，实时客流监控。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 南澳岛旅游区 -->
+    <div id="nan'ao" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">南澳岛旅游区</h2>
+                <span class="close" onclick="closeModal('nan'ao')">&times;</span>
+            </div>
+            <div class="modal-body">
+                <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=Nanao%20Island%20tourist%20area%20with%20coastal%20scenery%2C%20white%20sand%20beach%2C%20clear%20blue%20water%2C%20daytime%20view&image_size=landscape_16_9" alt="南澳岛旅游区" class="modal-image">
+                <div class="modal-info">
+                    <div class="info-item">
+                        <div class="info-label">价格</div>
+                        <div class="info-value">免费入场，部分景点收费</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">地理位置</div>
+                        <div class="info-value">汕头市南澳县</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">交通工具</div>
+                        <div class="info-value">自驾：走南澳大桥；公交：161路、162路</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">推荐指数</div>
+                        <div class="info-value">
+                            <div class="rating">
+                                <span class="star">★</span>
+                                <span class="star">★</span>
+                                <span class="star">★</span>
+                                <span class="star">★</span>
+                                <span class="star">☆</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="攻略">
+                    <h4>旅游攻略</h4>
+                    <div class="攻略-content">
+                        <p><strong>最佳游玩时间：</strong>夏季，适合海滩活动。</p>
+                        <p><strong>游玩路线：</strong>环岛游，参观各个海滩和景点，如青澳湾、金银岛等。</p>
+                        <p><strong>注意事项：</strong>带好泳衣和防晒用品；注意潮汐时间；选择正规的海鲜餐厅。</p>
+                        <p><strong>智慧服务：</strong>智能停车场，线上预约，AI景点推荐，实时天气监测。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 丹霞山风景区 -->
+    <div id="danxiashan" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">丹霞山风景区</h2>
+                <span class="close" onclick="closeModal('danxiashan')">&times;</span>
+            </div>
+            <div class="modal-body">
+                <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=Danxia%20Mountain%20scenic%20area%20with%20red%20rock%20formations%2C%20mountain%20landscape%2C%20green%20vegetation%2C%20daytime%20view&image_size=landscape_16_9" alt="丹霞山风景区" class="modal-image">
+                <div class="modal-info">
+                    <div class="info-item">
+                        <div class="info-label">价格</div>
+                        <div class="info-value">门票：100-150元/人</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">地理位置</div>
+                        <div class="info-value">韶关市仁化县丹霞山</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">交通工具</div>
+                        <div class="info-value">公交：韶关汽车东站有直达班车；自驾：导航至丹霞山风景区</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">推荐指数</div>
+                        <div class="info-value">
+                            <div class="rating">
+                                <span class="star">★</span>
+                                <span class="star">★</span>
+                                <span class="star">★</span>
+                                <span class="star">★</span>
+                                <span class="star">★</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="攻略">
+                    <h4>旅游攻略</h4>
+                    <div class="攻略-content">
+                        <p><strong>最佳游玩时间：</strong>春秋季节，气候适宜，避开夏季高温。</p>
+                        <p><strong>游玩路线：</strong>建议安排2天时间，第一天游览阳元石景区，第二天游览长老峰景区。</p>
+                        <p><strong>注意事项：</strong>穿舒适的运动鞋；带好足够的水和零食；注意安全，尤其是在陡峭的山路上。</p>
+                        <p><strong>智慧服务：</strong>智能导览，VR观景，线上购票，实时客流监测，生态环境监测系统。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 七星岩景区 -->
+    <div id="qixingyan" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">七星岩景区</h2>
+                <span class="close" onclick="closeModal('qixingyan')">&times;</span>
+            </div>
+            <div class="modal-body">
+                <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=Seven%20Star%20Crags%20scenic%20area%20with%20limestone%20karst%20hills%2C%20lakes%2C%20pavilions%2C%20daytime%20view&image_size=landscape_16_9" alt="七星岩景区" class="modal-image">
+                <div class="modal-info">
+                    <div class="info-item">
+                        <div class="info-label">价格</div>
+                        <div class="info-value">门票：70-100元/人</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">地理位置</div>
+                        <div class="info-value">肇庆市端州区七星岩风景区</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">交通工具</div>
+                        <div class="info-value">公交：1路、10路；自驾：导航至七星岩风景区</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">推荐指数</div>
+                        <div class="info-value">
+                            <div class="rating">
+                                <span class="star">★</span>
+                                <span class="star">★</span>
+                                <span class="star">★</span>
+                                <span class="star">★</span>
+                                <span class="star">☆</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="攻略">
+                    <h4>旅游攻略</h4>
+                    <div class="攻略-content">
+                        <p><strong>最佳游玩时间：</strong>春季，气候适宜，花卉盛开。</p>
+                        <p><strong>游玩路线：</strong>先乘船游览星湖，再登天柱岩，最后参观各个溶洞。</p>
+                        <p><strong>注意事项：</strong>穿舒适的鞋子；带好防晒用品和水；部分区域需要预约。</p>
+                        <p><strong>智慧服务：</strong>智能导览，AR讲解，线上预约，实时船票管理，智慧厕所系统。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 清远漂流景区 -->
+    <div id="qingyuan" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">清远漂流景区</h2>
+                <span class="close" onclick="closeModal('qingyuan')">&times;</span>
+            </div>
+            <div class="modal-body">
+                <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=Qingyuan%20rafting%20scenic%20area%20with%20river%20rapids%2C%20mountain%20scenery%2C%20people%20rafting%2C%20daytime%20view&image_size=landscape_16_9" alt="清远漂流景区" class="modal-image">
+                <div class="modal-info">
+                    <div class="info-item">
+                        <div class="info-label">价格</div>
+                        <div class="info-value">门票：120-200元/人</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">地理位置</div>
+                        <div class="info-value">清远市清新区</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">交通工具</div>
+                        <div class="info-value">自驾：导航至清远漂流景区；大巴：广州各大汽车站有直达班车</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">推荐指数</div>
+                        <div class="info-value">
+                            <div class="rating">
+                                <span class="star">★</span>
+                                <span class="star">★</span>
+                                <span class="star">★</span>
+                                <span class="star">★</span>
+                                <span class="star">☆</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="攻略">
+                    <h4>旅游攻略</h4>
+                    <div class="攻略-content">
+                        <p><strong>最佳游玩时间：</strong>夏季，水量充足，适合漂流。</p>
+                        <p><strong>游玩路线：</strong>先体验漂流，再参观周边景点，如古龙峡、黄腾峡等。</p>
+                        <p><strong>注意事项：</strong>带好泳衣和换洗衣物；注意安全，听从工作人员指导；保管好个人物品。</p>
+                        <p><strong>智慧服务：</strong>智能预约系统，线上购票，实时水流监测，智能储物柜，电子导览地图。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <p>粤见未来调研队 · 粤港澳大湾区智慧文旅调研成果展示</p>
+        <p>版权所有 © 粤见未来调研队 2026</p>
+        <p>数据来源：实地调研 + 广东省文旅厅公开数据</p>
+    </footer>
+
+    <script>
+        // 页面加载完成后隐藏加载动画
+        window.addEventListener('load', function() {
+            const loader = document.querySelector('.loader');
+            setTimeout(() => {
+                loader.classList.add('hidden');
+            }, 1000);
+        });
+        
+        // 滚动动画效果
+        function handleScrollAnimation() {
+            const elements = document.querySelectorAll('.fade-in');
+            elements.forEach(element => {
+                const elementTop = element.getBoundingClientRect().top;
+                const elementVisible = 150;
+                if (elementTop < window.innerHeight - elementVisible) {
+                    element.classList.add('visible');
+                }
+            });
+        }
+        
+        // 图片懒加载
+        function handleLazyLoad() {
+            const lazyImages = document.querySelectorAll('img.lazy');
+            lazyImages.forEach(img => {
+                const imgTop = img.getBoundingClientRect().top;
+                if (imgTop < window.innerHeight + 200) {
+                    img.src = img.dataset.src;
+                    img.classList.add('loaded');
+                }
+            });
+        }
+        
+        // 导航栏滚动效果
+        function handleNavbarScroll() {
+            const header = document.querySelector('.header');
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        }
+        
+        // 滚动进度条
+        function handleScrollProgress() {
+            const scrollProgress = document.querySelector('.scroll-progress');
+            const scrollTop = window.scrollY;
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const scrollPercent = (scrollTop / docHeight) * 100;
+            scrollProgress.style.width = scrollPercent + '%';
+        }
+        
+        // 初始加载时检查
+        window.addEventListener('load', handleScrollAnimation);
+        window.addEventListener('load', handleLazyLoad);
+        window.addEventListener('load', handleNavbarScroll);
+        window.addEventListener('load', handleScrollProgress);
+        // 滚动时检查
+        window.addEventListener('scroll', handleScrollAnimation);
+        window.addEventListener('scroll', handleLazyLoad);
+        window.addEventListener('scroll', handleNavbarScroll);
+        window.addEventListener('scroll', handleScrollProgress);
+        
+        // 汉堡菜单交互
+        const menuToggle = document.querySelector('.menu-toggle');
+        const navList = document.querySelector('.nav-list');
+        
+        menuToggle.addEventListener('click', function() {
+            menuToggle.classList.toggle('active');
+            navList.classList.toggle('active');
+        });
+        
+        // 点击导航链接后关闭菜单
+        document.querySelectorAll('.nav-list a').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                    // 关闭菜单
+                    menuToggle.classList.remove('active');
+                    navList.classList.remove('active');
+                }
+            });
+        });
+
+        // 模态框功能
+        function openModal(id) {
+            document.getElementById(id).style.display = 'block';
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).style.display = 'none';
+        }
+
+        // 点击模态框外部关闭
+        window.onclick = function(event) {
+            const modals = document.querySelectorAll('.modal');
+            modals.forEach(modal => {
+                if (event.target == modal) {
+                    modal.style.display = 'none';
+                }
+            });
+        }
+
+        // 增强交互效果
+        document.addEventListener('DOMContentLoaded', function() {
+            // 为卡片添加悬停效果
+            const cards = document.querySelectorAll('.scenic-card, .overview-card, .data-card, .spot-card');
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-5px) scale(1.02)';
+                    this.style.boxShadow = '0 10px 20px rgba(0,0,0,0.1)';
+                    this.style.transition = 'all 0.3s ease';
+                });
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0) scale(1)';
+                    this.style.boxShadow = '0 2px 10px rgba(0,0,0,0.05)';
+                });
+            });
+
+            // 为按钮添加悬停效果
+            const buttons = document.querySelectorAll('.report-link');
+            buttons.forEach(button => {
+                button.addEventListener('mouseenter', function() {
+                    this.style.transform = 'scale(1.05)';
+                    this.style.boxShadow = '0 6px 20px rgba(255, 179, 186, 0.4)';
+                    const shine = this.querySelector('span:nth-child(2)');
+                    if (shine) {
+                        shine.style.left = '100%';
+                    }
+                });
+                button.addEventListener('mouseleave', function() {
+                    this.style.transform = 'scale(1)';
+                    this.style.boxShadow = '0 4px 15px rgba(255, 179, 186, 0.3)';
+                    const shine = this.querySelector('span:nth-child(2)');
+                    if (shine) {
+                        shine.style.left = '-100%';
+                    }
+                });
+            });
+
+            // 为图表添加交互效果
+            const bars = document.querySelectorAll('.bar');
+            bars.forEach(bar => {
+                bar.addEventListener('mouseenter', function() {
+                    this.style.transform = 'scaleY(1.1)';
+                    this.style.transition = 'all 0.3s ease';
+                });
+                bar.addEventListener('mouseleave', function() {
+                    this.style.transform = 'scaleY(1)';
+                });
+            });
+        });
+        
+        // 显示城市景点
+        function showCitySpots(city) {
+            // 滚动到景点列表
+            document.getElementById('gd-tourism').scrollIntoView({ behavior: 'smooth' });
+            
+            // 隐藏所有景点卡片
+            const allCards = document.querySelectorAll('.scenic-card');
+            allCards.forEach(card => {
+                card.style.display = 'none';
+            });
+            
+            // 显示对应城市的景点卡片
+            const cityCards = Array.from(document.querySelectorAll('.scenic-card')).filter(card => {
+                const cityElement = card.querySelector('.city');
+                return cityElement && cityElement.textContent.includes(city);
+            });
+            
+            cityCards.forEach(card => {
+                card.style.display = 'block';
+            });
+            
+            // 如果没有找到该城市的景点卡片，显示提示
+            if (cityCards.length === 0) {
+                alert(`暂未收录${city}的智慧旅游景点信息，敬请期待！`);
+                // 显示所有卡片
+                allCards.forEach(card => {
+                    card.style.display = 'block';
+                });
+            }
+        }
+    </script>
+</body>
+</html>

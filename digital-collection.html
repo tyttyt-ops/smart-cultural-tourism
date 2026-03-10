@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数字藏品 - 粤港澳大湾区智慧文旅</title>
+    <style>
+        /* 马卡龙配色方案 */
+        :root {
+            --macaron-pink: #ffb3ba;
+            --macaron-blue: #bae1ff;
+            --macaron-green: #baffc9;
+            --macaron-yellow: #ffffba;
+            --macaron-purple: #d5a6bd;
+            --macaron-orange: #ffdfba;
+            --macaron-teal: #baffef;
+            --bg-color: #f9f7f7;
+            --text-color: #555;
+            --card-bg: #ffffff;
+            --accent-color: #ffb3ba;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "SimHei", "Microsoft YaHei", sans-serif;
+        }
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            font-size: 16px;
+        }
+        .container {
+            width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+        .header {
+            background: linear-gradient(90deg, var(--macaron-blue), var(--macaron-pink));
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 999;
+        }
+        .nav {
+            width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+        }
+        .logo {
+            font-size: 20px;
+            font-weight: bold;
+            color: #000000;
+            text-decoration: none;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+        }
+        .nav-list {
+            display: flex;
+            list-style: none;
+        }
+        .nav-list li {
+            margin-left: 30px;
+        }
+        .nav-list a {
+            text-decoration: none;
+            color: #000000;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.3s;
+            padding: 5px 10px;
+            border-radius: 20px;
+            background: rgba(255,255,255,0.2);
+        }
+        .nav-list a:hover {
+            background: rgba(255,255,255,0.4);
+            transform: translateY(-2px);
+        }
+        .section {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05), 0 0 0 1px rgba(255, 255, 186, 0.2);
+            border-top: 4px solid var(--macaron-yellow);
+        }
+        .section-title {
+            font-size: 26px;
+            color: #000000;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 3px solid #ffffea;
+            position: relative;
+            font-weight: bold;
+        }
+        .section-title::after {
+            content: "";
+            position: absolute;
+            bottom: -3px;
+            left: 0;
+            width: 80px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--macaron-yellow), var(--macaron-blue));
+            border-radius: 3px;
+        }
+        .collection-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+        .collection-image {
+            width: 100%;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .collection-info {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .collection-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+        .feature-card {
+            background: linear-gradient(135deg, var(--macaron-purple), #f0f9ff);
+            padding: 20px;
+            border-radius: 15px;
+            border: 1px solid #d1e9ff;
+            text-align: center;
+        }
+        .feature-card h4 {
+            color: var(--macaron-pink);
+            margin-bottom: 10px;
+        }
+        .collection-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+        .collection-card {
+            background: linear-gradient(135deg, var(--macaron-orange), #f0f9ff);
+            padding: 20px;
+            border-radius: 15px;
+            border: 1px solid #d1e9ff;
+            transition: all 0.3s ease;
+        }
+        .collection-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(255, 223, 186, 0.3);
+        }
+        .collection-card h4 {
+            color: var(--macaron-purple);
+            margin-bottom: 10px;
+        }
+        .back-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background: linear-gradient(90deg, var(--macaron-pink), var(--macaron-blue));
+            color: #000000;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: bold;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+        }
+        .back-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <!-- 顶部导航栏 -->
+    <header class="header">
+        <nav class="nav">
+            <a href="h1.html" class="logo">粤见未来调研队</a>
+            <ul class="nav-list">
+                <li><a href="h1.html#overview">调研概况</a></li>
+                <li><a href="h1.html#spot">点位详情</a></li>
+                <li><a href="h1.html#smart-experience">智慧文旅体验</a></li>
+                <li><a href="h1.html#ip-lab">数字形象IP实验室</a></li>
+                <li><a href="h1.html#gd-tourism">广东智慧景点</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- 核心内容容器 -->
+    <div class="container">
+        <!-- 数字藏品 -->
+        <section class="section">
+            <h2 class="section-title">数字藏品</h2>
+            <div class="collection-content">
+                <div>
+                    <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=Digital%20collection%20NFT%20of%20Guangdong%20cultural%20relics%2C%20blockchain%20technology%20in%20cultural%20tourism%2C%20digital%20souvenirs%20with%20Chinese%20elements&image_size=landscape_16_9" alt="数字藏品" class="collection-image">
+                </div>
+                <div class="collection-info">
+                    <p>数字藏品是广东各大景区推出的基于区块链技术的数字化纪念品，为游客提供独特的文化体验和收藏价值。</p>
+                    <p>数字藏品的特点：</p>
+                    <ul>
+                        <li>基于区块链技术，具有唯一性和不可篡改性</li>
+                        <li>融合广东文化元素，展现地方特色</li>
+                        <li>可以作为纪念品收藏，也可以在数字平台上交易</li>
+                        <li>支持文化传承和创新，为传统文化注入新活力</li>
+                    </ul>
+                    <p>数字藏品不仅为游客提供了独特的纪念品，也为景区创造了新的收入来源，同时推动了文化的数字化传播。</p>
+                </div>
+            </div>
+            
+            <!-- 数字藏品特色 -->
+            <div class="collection-features">
+                <div class="feature-card">
+                    <h4>唯一性</h4>
+                    <p>基于区块链技术，每个数字藏品都具有唯一的标识，确保其真实性和稀缺性。</p>
+                </div>
+                <div class="feature-card">
+                    <h4>文化特色</h4>
+                    <p>融合广东文化元素，展现地方特色，为传统文化注入新活力。</p>
+                </div>
+                <div class="feature-card">
+                    <h4>收藏价值</h4>
+                    <p>可以作为纪念品收藏，也可以在数字平台上交易，具有一定的投资价值。</p>
+                </div>
+                <div class="feature-card">
+                    <h4>创新传播</h4>
+                    <p>通过数字化方式，推动文化的传播和传承，吸引更多年轻人关注传统文化。</p>
+                </div>
+            </div>
+            
+            <!-- 推荐藏品 -->
+            <h3 style="margin-top: 40px; color: var(--macaron-purple);">推荐藏品</h3>
+            <div class="collection-list">
+                <div class="collection-card">
+                    <h4><a href="https://www.cantontower.com/" target="_blank" style="color: var(--macaron-blue); text-decoration: none;">广州塔数字纪念币</a></h4>
+                    <p>以广州塔为主题设计的数字纪念币，融合了广州的城市特色和现代科技元素。</p>
+                    <p><strong>特色：</strong>基于区块链技术，具有唯一标识，可在数字平台上展示和交易。</p>
+                </div>
+                <div class="collection-card">
+                    <h4><a href="https://www.danxiashan.org/" target="_blank" style="color: var(--macaron-blue); text-decoration: none;">丹霞山数字门票</a></h4>
+                    <p>丹霞山景区推出的数字门票，不仅可以作为入园凭证，还可以作为纪念品收藏。</p>
+                    <p><strong>特色：</strong>融合丹霞山的自然景观元素，具有独特的艺术价值和收藏价值。</p>
+                </div>
+                <div class="collection-card">
+                    <h4><a href="https://www.chenjiaci.com/" target="_blank" style="color: var(--macaron-blue); text-decoration: none;">陈家祠数字文创</a></h4>
+                    <p>以陈家祠的建筑元素和文化内涵为主题设计的数字文创产品。</p>
+                    <p><strong>特色：</strong>展现岭南建筑的特色，融合传统文化与现代科技，具有较高的艺术价值。</p>
+                </div>
+            </div>
+            
+            <a href="h1.html#smart-experience" class="back-button">返回智慧文旅体验</a>
+        </section>
+    </div>
+</body>
+</html>
