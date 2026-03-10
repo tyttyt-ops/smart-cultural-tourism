@@ -1002,14 +1002,15 @@
             resultContent.innerHTML = '<div class="loading">正在生成IP形象描述，请稍候...</div>';
 
             // 调用OpenAI API
-            fetch('https://api-gpt-ge.apifox.cn/5071665m0/v1/chat/completions', {
+            fetch('https://api.gpt.ge/v1/chat/completions', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${apiKey}`
+                    'Authorization': `Bearer ${apiKey}`,
+                    'x-foo': 'true'
                 },
                 body: JSON.stringify({
-                    model: 'gpt-3.5-turbo',
+                    model: 'gpt-4.1-mini',
                     messages: [
                         {
                             role: 'system',
